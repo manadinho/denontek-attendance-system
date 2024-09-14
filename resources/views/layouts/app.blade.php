@@ -44,48 +44,8 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow-sm">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
-            <!-- Page Content -->
-            <main class="ps-md-5 pe-md-5 ps-2 pe-2">
-                @if ($errors->any())
-                    <div class="alert alert-danger mt-2">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                {{ $slot }}
-            </main>
-        </div>
         <script>
-            const ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/123-abc');
-
+            ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/123-abc');
             const pingInterval = 25000;
             let pingIntervalId;
 
@@ -93,8 +53,8 @@
                 console.log('Connected to the WebSocket server');
                 
                 // Example of sending a message to the server
-                // const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
-                // ws.send(message);
+                const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
+                ws.send(message);
 
                 // Start polling to keep the connection alive
                 pingIntervalId = setInterval(() => {
@@ -139,5 +99,44 @@
             //     }
             // };
         </script>
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
+
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow-sm">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
+
+            <!-- Page Content -->
+            <main class="ps-md-5 pe-md-5 ps-2 pe-2">
+                @if ($errors->any())
+                    <div class="alert alert-danger mt-2">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                {{ $slot }}
+            </main>
+        </div>
     </body>
 </html>

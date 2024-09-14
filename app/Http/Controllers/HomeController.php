@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Standard;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
     public function index()
     {
         $school_id = session('school_id');
-        $standardQuery = Standard::withCount('students')->where('school_id', $school_id);
+        $standardQuery = Standard::withCount('students')
+                        ->withCount(['students as present_students_count' => function($query) {
+                            $query->whereHas('attendances', function($query) {
+                                $query->whereDate('check_in', Carbon::today());
+                            });
+                        }])
+                        ->where('school_id', $school_id);
 
         if(userType() == 'teacher') {
             $standardQuery->whereHas('teachers', function($query) {

@@ -15,4 +15,8 @@ class Student extends Model
     {
         return $this->belongsTo(Standard::class);
     }
+
+    public function attendances() {
+        return $this->hasMany(Attendance::class);
+    }
 }

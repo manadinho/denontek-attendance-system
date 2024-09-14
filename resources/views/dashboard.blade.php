@@ -12,12 +12,6 @@
             @empty
                 <p>No Standard Found</p>
             @endforelse
-            {{-- @include('partials.attendance-card')
-            @include('partials.attendance-card')
-            @include('partials.attendance-card')
-            @include('partials.attendance-card')
-            @include('partials.attendance-card')
-            @include('partials.attendance-card') --}}
         </div>
     </div>
 </x-app-layout>

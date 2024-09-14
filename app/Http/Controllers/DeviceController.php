@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Attendance;
 use App\Models\StaffAttendance;
 use App\Models\SchoolSetting;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -61,26 +62,20 @@ class DeviceController extends Controller
 
     private function checkIfAttendanceForStaff($device, $staff)
     {
-        $staffAttendance = StaffAttendance::where('staff_id', $staff->id)->whereDate('created_at', Carbon::today())->latest() ?? null;
-        if($staffAttendance) {
-            if(!$staffAttendance->check_out) {
-                $staffAttendance->update([
-                    'check_out' => Carbon::now(),
-                ]);
-                return ['message' => 'Check out success'];
-            }
-            if(!$staffAttendance->created_at->gt(Carbon::now()->subMinutes(20))) {
-                return ['message' => 'Already checked out'];
-            }
+        $recentAttendance = StaffAttendance::where('staff_id', $staff->id)
+                            ->where('created_at', '>=', Carbon::now()->subMinutes(20))
+                            ->first();
+        if($recentAttendance) {
+            return ['message' => 'Multiple Swipes'];
         }
 
         StaffAttendance::create([
             'staff_id' => $staff->id,
             'school_id' => $device->school_id,
-            'check_in' => Carbon::now(),
+            'timestamp' => Carbon::now(),
         ]);
 
-        return ['message' => 'Check in success'];
+        return ['message' => 'Success'];
     }
 
     private function checkIfAttendanceForStudent($device, $student)

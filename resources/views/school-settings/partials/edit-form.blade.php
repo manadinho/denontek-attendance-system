@@ -19,19 +19,19 @@
             </div>
 
             <div class="col-md-6">
-                <x-input-label for="checkin_end" :value="__('CheckIn Start')" />
+                <x-input-label for="checkin_end" :value="__('CheckIn End')" />
                 <x-text-input id="checkin_end" name="checkin_end" type="time" class="mt-1 block w-full" :value="old('checkin_end', $schoolSettings->checkin_end)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkin_end')" />
             </div>
 
             <div class="col-md-6">
-                <x-input-label for="checkout_start" :value="__('CheckIn Start')" />
+                <x-input-label for="checkout_start" :value="__('CheckOut Start')" />
                 <x-text-input id="checkout_start" name="checkout_start" type="time" class="mt-1 block w-full" :value="old('checkout_start', $schoolSettings->checkout_start)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_start')" />
             </div>
 
             <div class="col-md-6">
-                <x-input-label for="checkout_end" :value="__('CheckIn Start')" />
+                <x-input-label for="checkout_end" :value="__('CheckOut End')" />
                 <x-text-input id="checkout_end" name="checkout_end" type="time" class="mt-1 block w-full" :value="old('checkout_end', $schoolSettings->checkout_end)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_end')" />
             </div>

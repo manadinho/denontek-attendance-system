@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('staff_id');
             $table->bigInteger('school_id');
-            $table->timestamp('check_in');
-            $table->timestamp('check_out')->nullable();
+            $table->timestamp('timestamp');
             $table->timestamps();
         });
     }

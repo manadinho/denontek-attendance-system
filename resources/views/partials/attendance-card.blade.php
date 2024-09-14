@@ -14,8 +14,8 @@
             <p class="mt-3 mb-0 text-muted text-sm">
                 <div class="row">
                     <div class="col-md-4 fs-6 fw-bold"><span class="text-dark"><i class="fas fa-users"></i> Total: {{$standard->students_count}}</span></div>
-                    <div class="col-md-4 fs-6 fw-bold"><span class="text-success"><i class="fas fa-check"></i> Present: 45</span></div>
-                    <div class="col-md-4 fs-6 fw-bold"><span class="text-danger"><i class="fas fa-times"></i> Absent: 5</span></div>
+                    <div class="col-md-4 fs-6 fw-bold"><span class="text-success"><i class="fas fa-check"></i> Present: {{ $standard->present_students_count }}</span></div>
+                    <div class="col-md-4 fs-6 fw-bold"><span class="text-danger"><i class="fas fa-times"></i> Absent: {{ $standard->students_count - $standard->present_students_count }}</span></div>
                 </div>
             </p>
         </div>
