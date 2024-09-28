@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/index', [StudentController::class, 'index'])->name('index');
             Route::post('/store', [StudentController::class, 'store'])->name('store');
             Route::get('/delete/{student_id}', [StudentController::class, 'destroy'])->name('destroy');
+            Route::post('/mark-manual-attendance', [StudentController::class, 'markManualAttendance'])->name('mark-manual-attendance');
         });
 
         Route::get('/school-settings/edit', [SettingController::class, 'editSchoolSettings'])->name('school-settings.edit');
@@ -72,3 +73,8 @@ Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->
 Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
 
 require __DIR__.'/auth.php';
+
+
+/* THINGS TO ADDRESS */
+// 1. Mac Address check in DeviceController
+// 2. Channel Names on Client and Controllers

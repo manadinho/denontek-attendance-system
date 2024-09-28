@@ -17,12 +17,12 @@ class DeviceController extends Controller
     public function registerRfid(Request $request)
     {
         $request->validate([
-            // 'mac_address' => 'required',
+            'mac_address' => 'required',
             'rfid' => 'required',
         ]);
 
-        // $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
-        $device = Device::where([['mac_address', '=', "3C:61:05:14:BA:80"]])->first();
+        $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
+        // $device = Device::where([['mac_address', '=', "3C:61:05:14:BA:80"]])->first();
 
         if(!$device) {
             return response()->json(['message' => 'Device not found'], 404);
@@ -36,12 +36,12 @@ class DeviceController extends Controller
     public function markAttendance(Request $request)
     {
         $request->validate([
-            // 'mac_address' => 'required',
+            'mac_address' => 'required',
             'rfid' => 'required',
         ]);
 
-        // $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
-        $device = Device::where([['mac_address', '=', "3C:61:05:14:BA:80"]])->first();
+        $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
+        // $device = Device::where([['mac_address', '=', "3C:61:05:14:BA:80"]])->first();
 
         if(!$device) {
             return response()->json(['message' => 'Device not found'], 404);

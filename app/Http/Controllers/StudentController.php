@@ -77,4 +77,34 @@ class StudentController extends Controller
 
         return redirect()->back()->with('success', 'Student deleted successfully');
     }
+
+    public function markManualAttendance(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required',
+            'check_in' => 'required',
+            'check_out' => 'required',
+        ]);
+
+        $student = Student::where([['id', '=', $request->student_id], ['school_id', '=', session('school_id')]])->first();
+        if(!$student) {
+            return redirect()->back()->with('error', 'Student not found');
+        }
+
+        $attendance = Attendance::where([['student_id', '=', $request->student_id], ['check_in', '=', $request->check_in]])->first();
+        if($attendance) {
+            $attendance->check_in = $request->check_in;
+            $attendance->check_out = $request->check_out;
+            $attendance->save();
+        } else {
+            Attendance::create([
+                'student_id' => $request->student_id,
+                'school_id' => session('school_id'),
+                'check_in' => $request->check_in,
+                'check_out' => $request->check_out,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Attendance marked successfully');
+    }
 }
