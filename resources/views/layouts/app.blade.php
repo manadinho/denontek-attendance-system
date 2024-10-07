@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="icon" type="image/x-icon" href="https://denontek.com.pk/image/catalog/Logo/icon.png">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -44,61 +45,66 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        <script>
-            ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/123-abc');
-            const pingInterval = 25000;
-            let pingIntervalId;
+        @php
+            $device = \App\Models\Device::where('school_id', session('school_id'))->first();
+        @endphp
+        @if($device)
+            <script>
+                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->mac_address)}}');
+                const pingInterval = 25000;
+                let pingIntervalId;
 
-            ws.onopen = () => {
-                console.log('Connected to the WebSocket server');
-                
-                // Example of sending a message to the server
-                const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
-                ws.send(message);
+                ws.onopen = () => {
+                    console.log('Connected to the WebSocket server');
+                    
+                    // Example of sending a message to the server
+                    const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
+                    ws.send(message);
 
-                // Start polling to keep the connection alive
-                pingIntervalId = setInterval(() => {
-                    if (ws.readyState === WebSocket.OPEN) {
-                        // Send a ping message or an empty message as a heartbeat
-                        const pingMessage = JSON.stringify({ type: 'ping' });
-                        ws.send(pingMessage);
-                    }
-                }, pingInterval);
-            };
+                    // Start polling to keep the connection alive
+                    pingIntervalId = setInterval(() => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            // Send a ping message or an empty message as a heartbeat
+                            const pingMessage = JSON.stringify({ type: 'ping' });
+                            ws.send(pingMessage);
+                        }
+                    }, pingInterval);
+                };
 
-            ws.onclose = () => {
-                console.log('WebSocket connection closed');
-                // Clear the polling interval when the connection is closed
-                clearInterval(pingIntervalId);
-            };
+                ws.onclose = () => {
+                    console.log('WebSocket connection closed');
+                    // Clear the polling interval when the connection is closed
+                    clearInterval(pingIntervalId);
+                };
 
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                // Clear the polling interval on error
-                clearInterval(pingIntervalId);
-            };
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    // Clear the polling interval on error
+                    clearInterval(pingIntervalId);
+                };
 
-            // ws.onopen = () => {
-            //     console.log('Connected to the WebSocket server');
-                
-            //     // Example of sending a message to the server
-            //     const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
-            //     ws.send(message);
-            // };
+                // ws.onopen = () => {
+                //     console.log('Connected to the WebSocket server');
+                    
+                //     // Example of sending a message to the server
+                //     const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
+                //     ws.send(message);
+                // };
 
-            // ws.onmessage = (event) => {
-            //     const message = JSON.parse(event.data);
-            //     console.log('Received message from server:', message);
-                
-            //     // Handle different message types if needed
-            //     if (message.type === 'uuid') {
-            //         console.log('Received UUID:', message.data);
-            //     }
-            //     if (message.type === 'disconnect') {
-            //         console.log('Server disconnected:', message.message);
-            //     }
-            // };
-        </script>
+                // ws.onmessage = (event) => {
+                //     const message = JSON.parse(event.data);
+                //     console.log('Received message from server:', message);
+                    
+                //     // Handle different message types if needed
+                //     if (message.type === 'uuid') {
+                //         console.log('Received UUID:', message.data);
+                //     }
+                //     if (message.type === 'disconnect') {
+                //         console.log('Server disconnected:', message.message);
+                //     }
+                // };
+            </script>
+        @endif
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 

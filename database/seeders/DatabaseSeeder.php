@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             // Create Device
             $deviceData = [
                 'school_id'  => $shool->id,
-                'mac_address' => '84:CC:A8:5E:53:5C',
+                'mac_address' => '84:CC:A8:5E:56:20',
                 'type'       => 'registeration',
             ];
             DB::table('devices')->insert($deviceData);
