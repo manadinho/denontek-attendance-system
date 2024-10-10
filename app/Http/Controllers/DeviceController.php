@@ -38,6 +38,7 @@ class DeviceController extends Controller
         $request->validate([
             'mac_address' => 'required',
             'rfid' => 'required',
+            'timestamp' => 'required'
         ]);
 
         $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
@@ -49,18 +50,18 @@ class DeviceController extends Controller
 
         $student = Student::where([['rfid', '=', $request->rfid], ['school_id', '=', $device->school_id]])->first();
         if($student) {
-            return response()->json($this->checkIfAttendanceForStudent($device, $student));
+            return response()->json($this->checkIfAttendanceForStudent($device, $student, $request->timestamp));
         }
         
         $staff = User::where([['rfid', '=', $request->rfid], ['school_id', '=', $device->school_id]])->first();
         if($staff) {
-            return response()->json($this->checkIfAttendanceForStaff($device, $staff));
+            return response()->json($this->checkIfAttendanceForStaff($device, $staff, $request->timestamp));
         }
 
         return response()->json(['message' => 'No record found'], 404);
     }
 
-    private function checkIfAttendanceForStaff($device, $staff)
+    private function checkIfAttendanceForStaff($device, $staff, $timestamp)
     {
         $recentAttendance = StaffAttendance::where('staff_id', $staff->id)
                             ->where('created_at', '>=', Carbon::now()->subMinutes(20))
@@ -72,56 +73,63 @@ class DeviceController extends Controller
         StaffAttendance::create([
             'staff_id' => $staff->id,
             'school_id' => $device->school_id,
-            'timestamp' => Carbon::now(),
+            'timestamp' => $timestamp,
         ]);
 
         return ['message' => 'Success'];
     }
 
-    private function checkIfAttendanceForStudent($device, $student)
+    private function checkIfAttendanceForStudent($device, $student, $timestamp)
     {
+        // Convert the provided timestamp to a Carbon instance
+        $providedTime = Carbon::parse($timestamp);
+        
         $schoolSetting = SchoolSetting::where('school_id', $device->school_id)->first();
         $todayStudentAttendance = null;
-        
-        $todayStudentAttendance = Attendance::where('student_id', $student->id)->whereDate('created_at', Carbon::today())->first();
 
-        if(date('H:i:s') >= $schoolSetting->checkin_start && date('H:i:s') <= $schoolSetting->checkin_end) {
+        // Use the provided timestamp date instead of today's date
+        $todayStudentAttendance = Attendance::where('student_id', $student->id)
+            ->whereDate('check_in', $providedTime->toDateString())
+            ->first();
+
+        // Use the time from the provided timestamp
+        $currentTime = $providedTime->format('H:i:s');
+
+        // Check if current time is within check-in time
+        if($currentTime >= $schoolSetting->checkin_start && $currentTime <= $schoolSetting->checkin_end) {
             if(!$todayStudentAttendance) {
                 Attendance::create([
                     'student_id' => $student->id,
                     'school_id' => $device->school_id,
-                    'check_in' => Carbon::now(),
+                    'check_in' => $providedTime,  // Use provided timestamp for check-in time
                 ]);
                 return ['message' => 'Check in success'];
             }
             return ['message' => 'Already checked in'];
         }
 
-        if(date('H:i:s') >= $schoolSetting->checkout_start && date('H:i:s') <= $schoolSetting->checkout_end) {
+        // Check if current time is within check-out time
+        if($currentTime >= $schoolSetting->checkout_start && $currentTime <= $schoolSetting->checkout_end) {
             if($todayStudentAttendance) {
                 $todayStudentAttendance->update([
-                    'check_out' => Carbon::now(),
+                    'check_out' => $providedTime,  // Use provided timestamp for check-out time
                 ]);
                 return ['message' => 'Check out success'];
             }
             return ['message' => 'Check in first'];
         }
 
-        // $message = $todayStudentAttendance ? 'Check out time not started' : 'Check in time not started';
-
-        // $message = date('H:i:s') > $schoolSetting->checkin_end ? 'Check in time ended' : $message;
-        // $message = date('H:i:s') > $schoolSetting->checkout_end ? 'Check out time ended' : $message;
-        $current_time = date('H:i:s');
+        // Determine appropriate message for the current time
         $message = '';
 
         if ($todayStudentAttendance) {
-            if ($current_time > $schoolSetting->checkout_end) {
+            if ($currentTime > $schoolSetting->checkout_end) {
                 $message = 'Check out time ended';
             } else {
                 $message = 'Check out time not started';
             }
         } else {
-            if ($current_time > $schoolSetting->checkin_end) {
+            if ($currentTime > $schoolSetting->checkin_end) {
                 $message = 'Check in time ended';
             } else {
                 $message = 'Check in time not started';
