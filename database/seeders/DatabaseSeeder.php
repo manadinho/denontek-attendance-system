@@ -54,28 +54,28 @@ class DatabaseSeeder extends Seeder
             $deviceData = [[
                 'school_id'  => $shool->id,
                 'mac_address' => '84:CC:A8:5E:56:20',
-                'chip_id' => '35555327396996',
+                'chip_id' => '3859534809',
                 'type'       => 'push_to_server',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'mac_address' => 'eeeeeeeeeeeee',
-                'chip_id' => '141536688169276',
+                'chip_id' => '3861788420',
                 'type'       => 'receiver',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'mac_address' => 'wwwwwwwwwww',
-                'chip_id' => '9742737403935',
+                'chip_id' => '1665368377',
                 'type'       => 'attendance',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'mac_address' => 'dddddddddddd',
-                'chip_id' => '194381965779260',
+                'chip_id' => '1637954209',
                 'type'       => 'registeration',
                 'created_at' => now(),
             ]];
