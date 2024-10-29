@@ -38,6 +38,16 @@
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="registration-device-select">Registeration Device</label>
+                    <select id="registration-device-select" class="form-control rounded" required onchange="selectRegistrationDevice(this)">
+                        <option value="">Select Device</option>
+                        @foreach($registrationDevices as $device)
+                            <option value="{{ $device->chip_id }}">{{ $device->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="rfid">RFID</label>
                     <input type="text" name="rfid" id="rfid" class="form-control rounded" required>
                 </div>

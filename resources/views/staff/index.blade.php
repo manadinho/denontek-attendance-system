@@ -73,22 +73,6 @@
                     }
                 });
             }
-            ws.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                console.log('Received message from server:', message);
-                
-                // Handle different message types if needed
-                if (message.type === 'uuid') {
-                    console.log('Received UUID:', message.data);
-                }
-                if (message.type === 'disconnect') {
-                    console.log('Server disconnected:', message.message);
-                }
-                
-                if(message.type === 'register') {
-                    $('#rfid').val(message.rfid);
-                }
-            };
         </script>        
     </div>
 </x-app-layout>

@@ -50,12 +50,35 @@ class DatabaseSeeder extends Seeder
             ];
             User::updateOrCreate(['email' => $userData['email']], $userData);
 
-            // Create Device
-            $deviceData = [
+            // Create Devices
+            $deviceData = [[
                 'school_id'  => $shool->id,
                 'mac_address' => '84:CC:A8:5E:56:20',
+                'chip_id' => '35555327396996',
+                'type'       => 'push_to_server',
+                'created_at' => now(),
+            ],
+            [
+                'school_id'  => $shool->id,
+                'mac_address' => 'eeeeeeeeeeeee',
+                'chip_id' => '141536688169276',
+                'type'       => 'receiver',
+                'created_at' => now(),
+            ],
+            [
+                'school_id'  => $shool->id,
+                'mac_address' => 'wwwwwwwwwww',
+                'chip_id' => '9742737403935',
+                'type'       => 'attendance',
+                'created_at' => now(),
+            ],
+            [
+                'school_id'  => $shool->id,
+                'mac_address' => 'dddddddddddd',
+                'chip_id' => '194381965779260',
                 'type'       => 'registeration',
-            ];
+                'created_at' => now(),
+            ]];
             DB::table('devices')->insert($deviceData);
         } catch (\Throwable $th) {
             echo $th->getMessage();

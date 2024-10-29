@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('school_id');
-            $table->string('mac_address', length: 50);
-            $table->enum('type', ['registeration', 'attendance'])->default('registeration');
+            $table->string('name', length: 50)->nullable();
+            $table->string('mac_address', length: 50)->unique();
+            $table->string('chip_id', length: 50)->unique();
+            $table->enum('type', ['receiver', 'push_to_server', 'registeration', 'attendance'])->default('registeration');
             $table->timestamps();
         });
     }

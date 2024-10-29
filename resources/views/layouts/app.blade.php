@@ -42,15 +42,71 @@
                     width: 100% !important;
                 }
             }
+            .success-animation { margin:150px auto;}
+
+.checkmark {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #4bb71b;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px #4bb71b;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    position:relative;
+    top: 5px;
+    right: 5px;
+   margin: 0 auto;
+}
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #4bb71b;
+    fill: #fff;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+ 
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #4bb71b;
+    }
+}
         </style>
     </head>
     <body class="font-sans antialiased">
         @php
-            $device = \App\Models\Device::where('school_id', session('school_id'))->first();
+            $device = \App\Models\Device::where('school_id', session('school_id'))->where('type', 'push_to_server')->first();
         @endphp
         @if($device)
             <script>
-                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->mac_address)}}');
+                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->chip_id)}}');
                 const pingInterval = 25000;
                 let pingIntervalId;
 
@@ -58,7 +114,7 @@
                     console.log('Connected to the WebSocket server');
                     
                     // Example of sending a message to the server
-                    const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
+                    const message = JSON.stringify({ type: 'message', data: 'ARP' });
                     ws.send(message);
 
                     // Start polling to keep the connection alive
@@ -103,6 +159,37 @@
                 //         console.log('Server disconnected:', message.message);
                 //     }
                 // };
+
+                $(document).ready(function() {
+                    window.selectedRegistrationDevice = localStorage.getItem('selectedRegistrationDevice') || ''; 
+                    $('#registration-device-select').val(window.selectedRegistrationDevice);
+                });
+
+                function selectRegistrationDevice(device) {
+                    window.selectedRegistrationDevice = $(device).val();
+                    localStorage.setItem('selectedRegistrationDevice', window.selectedRegistrationDevice);
+                }
+                
+                ws.onmessage = (event) => {
+                    const message = JSON.parse(event.data);
+                    
+                    if (message.type === 'disconnect') {
+                        console.log('Server disconnected:', message.message);
+                    }
+                    
+                    if(message.type === 'register') {
+                        const messageValue = message.value;
+                        console.log(window.selectedRegistrationDevice, messageValue.split('|')[1], messageValue.split('|')[1] == window.selectedRegistrationDevice)
+                        if(messageValue.split('|')[1] == window.selectedRegistrationDevice) {
+                            $('#rfid').val(messageValue.split('|')[0]);
+                        }
+                    }
+
+                    if(message.type === 'status') {
+                        $(`#device-chip-${message.value} .circle-online`).removeClass('hidden');
+                        $(`#device-chip-${message.value} .circle-offline`).addClass('hidden');
+                    }
+                }
             </script>
         @endif
         <div class="min-h-screen bg-gray-100">

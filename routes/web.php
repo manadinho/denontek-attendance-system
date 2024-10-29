@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/school-settings/edit', [SettingController::class, 'editSchoolSettings'])->name('school-settings.edit');
         Route::post('/school-settings/update', [SettingController::class, 'updateSchoolSettings'])->name('school-settings.update');
+        Route::post('/school-settings/update-device', [SettingController::class, 'updateDevice'])->name('school-settings.update-device');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

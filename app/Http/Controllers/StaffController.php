@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Student;
+use App\Models\Device;
 
 class StaffController extends Controller
 {
@@ -13,8 +14,9 @@ class StaffController extends Controller
     {
         $school_id = session('school_id');
         $staff = User::where([['school_id', '=', $school_id], ['type', '!=', 'admin']])->paginate(15);
+        $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
         
-        return view('staff.index', ['staffMembers' => $staff]);
+        return view('staff.index', ['staffMembers' => $staff, 'registrationDevices' => $registrationDevices]);
     }
 
     public function store(Request $request)

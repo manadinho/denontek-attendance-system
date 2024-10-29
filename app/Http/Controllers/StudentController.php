@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Standard;
 use App\Models\User;
+use App\Models\Device;
 
 class StudentController extends Controller
 {
@@ -18,7 +19,8 @@ class StudentController extends Controller
         }
         $students = Student::where($where)->with('standard', function($query) {$query->select('id', 'name');})->paginate(15);
         $standards = Standard::where('school_id', session('school_id'))->get(['id', 'name']);
-        return view('students.index', ['students' => $students, 'standards' => $standards]);
+        $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
+        return view('students.index', ['students' => $students, 'standards' => $standards, 'registrationDevices' => $registrationDevices]);
     }
 
     public function store(Request $request)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Standard;
+use App\Models\Device;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -26,7 +27,9 @@ class HomeController extends Controller
         }
 
         $standards = $standardQuery->get();
-        return view('dashboard', ['standards' => $standards]);
+        $devices = Device::where('school_id', $school_id)->whereIn('type', ['registeration', 'attendance'])->get();
+
+        return view('dashboard', ['standards' => $standards, 'devices' => $devices]);
     }
 
     public function schools()
