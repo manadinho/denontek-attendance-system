@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="current-route" content="{{ Route::currentRouteName() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         <link rel="icon" type="image/x-icon" href="https://denontek.com.pk/image/catalog/Logo/icon.png">
@@ -106,21 +107,37 @@
         @endphp
         @if($device)
             <script>
+                
+                window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
+                if(window.CURRENT_ROUTE_NAME === 'dashboard') {
+                    fetchStandardAttendanceCards();
+                }
+                
+                window.ATTENDANCE = [];
                 ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->chip_id)}}');
                 const pingInterval = 25000;
                 let pingIntervalId;
 
                 ws.onopen = () => {
                     console.log('Connected to the WebSocket server');
-                    
+
                     // Example of sending a message to the server
-                    const message = JSON.stringify({ type: 'message', data: 'ARP' });
-                    ws.send(message);
+                    ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+
+                    // Example of sending a message to the server
+                    ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
+
+                    setInterval(() => {
+                        // Example of sending a message to the server
+                        ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+
+                        // Example of sending a message to the server
+                        ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
+                    }, 300000); // 300000 milliseconds = 5 minutes
 
                     // Start polling to keep the connection alive
                     pingIntervalId = setInterval(() => {
                         if (ws.readyState === WebSocket.OPEN) {
-                            // Send a ping message or an empty message as a heartbeat
                             const pingMessage = JSON.stringify({ type: 'ping' });
                             ws.send(pingMessage);
                         }
@@ -139,26 +156,6 @@
                     clearInterval(pingIntervalId);
                 };
 
-                // ws.onopen = () => {
-                //     console.log('Connected to the WebSocket server');
-                    
-                //     // Example of sending a message to the server
-                //     const message = JSON.stringify({ type: 'message', data: 'Hello, Server!' });
-                //     ws.send(message);
-                // };
-
-                // ws.onmessage = (event) => {
-                //     const message = JSON.parse(event.data);
-                //     console.log('Received message from server:', message);
-                    
-                //     // Handle different message types if needed
-                //     if (message.type === 'uuid') {
-                //         console.log('Received UUID:', message.data);
-                //     }
-                //     if (message.type === 'disconnect') {
-                //         console.log('Server disconnected:', message.message);
-                //     }
-                // };
 
                 $(document).ready(function() {
                     window.selectedRegistrationDevice = localStorage.getItem('selectedRegistrationDevice') || ''; 
@@ -189,6 +186,61 @@
                         $(`#device-chip-${message.value} .circle-online`).removeClass('hidden');
                         $(`#device-chip-${message.value} .circle-offline`).addClass('hidden');
                     }
+
+                    if(message.type === 'onGetAttendance') {
+                        // check if valid json string or not
+                        try {
+                            const attendance = JSON.parse(message.value);
+
+                            if(attendance.length > 0) {
+                                window.ATTENDANCE = [...window.ATTENDANCE, ...attendance];
+                                ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
+                            }else {
+                                if(window.ATTENDANCE.length > 0) {
+                                    syncAttendance();
+                                }
+                            }
+                        } catch (e) {
+                            console.log(window.ATTENDANCE);
+                            syncAttendance();
+                            return;
+                        }
+                    }
+                }
+
+                function syncAttendance() {
+                    if(ATTENDANCE.length > 0) {
+                        $.ajax({
+                            url: "{{ route('device.mark-attendance-bulk') }}",
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                attendance: window.ATTENDANCE
+                            },
+                            success: function(response) {
+                                if(window.CURRENT_ROUTE_NAME === 'dashboard') {
+                                    fetchStandardAttendanceCards();
+                                }
+                                window.ATTENDANCE = [];
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+                }
+
+                function fetchStandardAttendanceCards() {
+                    $.ajax({
+                        url: "{{ route('standards-with-attendance') }}",
+                        type: 'GET',
+                        success: function(response) {
+                            $('#standard-attendance-cards').html(response.cards);
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
                 }
             </script>
         @endif

@@ -61,7 +61,31 @@ class DeviceController extends Controller
         return response()->json(['message' => 'No record found'], 404);
     }
 
-    private function checkIfAttendanceForStaff($device, $staff, $timestamp)
+    public function markAttendanceBulk(Request $request)
+    {
+
+        $device = Device::where([['school_id', auth()->user()->school_id]])->first();
+
+        foreach($request->attendance as $att) {
+            $student = Student::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
+            if($student) {
+                $attendance[] = $this->checkIfAttendanceForStudent($device, $student, $att['timestamp'], $att['id']);
+                continue;
+            }
+
+            $staff = User::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
+            if($staff) {
+                $attendance[] = $this->checkIfAttendanceForStaff($device, $staff, $att['timestamp'], $att['id']);
+                continue;
+            }
+
+            $attendance[] = ['message' => 'No record found'];
+        }
+
+        return response()->json($attendance);
+    }
+
+    private function checkIfAttendanceForStaff($device, $staff, $timestamp, $controllerId = null)
     {
         $recentAttendance = StaffAttendance::where('staff_id', $staff->id)
                             ->where('created_at', '>=', Carbon::now()->subMinutes(20))
@@ -71,6 +95,7 @@ class DeviceController extends Controller
         }
 
         StaffAttendance::create([
+            'controller_id' => $controllerId,
             'staff_id' => $staff->id,
             'school_id' => $device->school_id,
             'timestamp' => $timestamp,
@@ -79,7 +104,7 @@ class DeviceController extends Controller
         return ['message' => 'Success'];
     }
 
-    private function checkIfAttendanceForStudent($device, $student, $timestamp)
+    private function checkIfAttendanceForStudent($device, $student, $timestamp, $controllerId = null)
     {
         // Convert the provided timestamp to a Carbon instance
         $providedTime = Carbon::parse($timestamp);
@@ -99,6 +124,7 @@ class DeviceController extends Controller
         if($currentTime >= $schoolSetting->checkin_start && $currentTime <= $schoolSetting->checkin_end) {
             if(!$todayStudentAttendance) {
                 Attendance::create([
+                    'controller_id' => $controllerId,
                     'student_id' => $student->id,
                     'school_id' => $device->school_id,
                     'check_in' => $providedTime,  // Use provided timestamp for check-in time

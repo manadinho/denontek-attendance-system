@@ -50,12 +50,8 @@
     
     <h2 class="fs-3 fw-bold mt-3 mb-3">Standards</h2>
     <div class="mt-3">
-        <div class="row">
-            @forelse($standards as $standard)
-                @include('partials.attendance-card', ['standard' => $standard])
-            @empty
-                <p>No Standard Found</p>
-            @endforelse
+        <div class="row" id="standard-attendance-cards">
+            
         </div>
     </div>
 </x-app-layout>

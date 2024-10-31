@@ -34,7 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Common Routes
     Route::group(['middleware' => 'check.schoolid.session'], function () {
-        Route::get('/dashboard',[HomeController::class, 'index'])->name('dashboard'); 
+        Route::get('/dashboard',[HomeController::class, 'index'])->name('dashboard');
+        Route::get('/standards-with-attendance', [HomeController::class, 'standardsWithAttendnce'])->name('standards-with-attendance'); 
 
         Route::group(['prefix' => 'staff', 'as' => 'staff.'], function() {
             Route::get('/index', [StaffController::class, 'index'])->name('index');
@@ -63,6 +64,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
+
 });
 
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('controller_id')->nullable();
             $table->bigInteger('student_id');
             $table->bigInteger('school_id');
             $table->timestamp('check_in');
