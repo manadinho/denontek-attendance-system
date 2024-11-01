@@ -121,15 +121,19 @@
                 ws.onopen = () => {
                     console.log('Connected to the WebSocket server');
 
-                    // Example of sending a message to the server
-                    ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                    if(window.CURRENT_ROUTE_NAME === 'dashboard') {
+                        // Example of sending a message to the server
+                        ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                    }
 
                     // Example of sending a message to the server
                     ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
 
                     setInterval(() => {
-                        // Example of sending a message to the server
-                        ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                        if(window.CURRENT_ROUTE_NAME === 'dashboard') {
+                            // Example of sending a message to the server
+                            ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                        }
 
                         // Example of sending a message to the server
                         ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
