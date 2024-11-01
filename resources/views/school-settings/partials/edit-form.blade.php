@@ -51,4 +51,7 @@
             @endif
         </div>
     </form>
+    <div class="flex items-center gap-4">
+        <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
+    </div>
 </section>
