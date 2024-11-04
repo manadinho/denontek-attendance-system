@@ -65,8 +65,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
-
 });
 
 
@@ -76,6 +74,7 @@ Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallb
 // Device Routes
 Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
 Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
+Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
 
 require __DIR__.'/auth.php';
 

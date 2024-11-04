@@ -63,26 +63,36 @@ class DeviceController extends Controller
 
     public function markAttendanceBulk(Request $request)
     {
+        \Log::info($request->all());
 
-        $device = Device::where([['school_id', auth()->user()->school_id]])->first();
+        $request->validate([
+            'mac_address' => 'required',
+            'value' => 'required'
+        ]);
 
-        foreach($request->attendance as $att) {
-            $student = Student::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
-            if($student) {
-                $attendance[] = $this->checkIfAttendanceForStudent($device, $student, $att['timestamp'], $att['id']);
-                continue;
-            }
+        $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
 
-            $staff = User::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
-            if($staff) {
-                $attendance[] = $this->checkIfAttendanceForStaff($device, $staff, $att['timestamp'], $att['id']);
-                continue;
-            }
-
-            $attendance[] = ['message' => 'No record found'];
+        if(!$device) {
+            return response()->json(['message' => 'Device not found'], 404);
         }
 
-        return response()->json($attendance);
+        $attendances = json_decode($request->value, true);
+
+        foreach ($attendances as $attendance) {
+            $attendanceTimestamp = Carbon::createFromTimestamp($attendance['timestamp'])->format('Y-m-d H:i:s');
+            $student = Student::where([['rfid', '=', $attendance['rfid']], ['school_id', '=', $device->school_id]])->first();
+            if($student) {
+                $this->checkIfAttendanceForStudent($device, $student, $attendanceTimestamp);
+                continue;
+            }
+            
+            $staff = User::where([['rfid', '=', $attendance['rfid']], ['school_id', '=', $device->school_id]])->first();
+            if($staff) {
+                $this->checkIfAttendanceForStaff($device, $staff, $attendanceTimestamp);
+            }
+        }
+
+        return response()->json(['message' => 'Success']);
     }
 
     private function checkIfAttendanceForStaff($device, $staff, $timestamp, $controllerId = null)
