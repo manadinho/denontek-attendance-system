@@ -174,4 +174,17 @@ class DeviceController extends Controller
 
         return ['message' => $message];
     }
+
+    public function getLastAttId() 
+    {
+        $latestAttendance = Attendance::latest('controller_id')->first();
+        $latestStaffAttendance = StaffAttendance::latest('controller_id')->first();
+
+        $attendanceId = $latestAttendance->controller_id ?? 0;
+        $staffAttendanceId = $latestStaffAttendance->controller_id ?? 0;
+
+        $maxId = max($attendanceId, $staffAttendanceId);
+
+        return response()->json(['id' => $maxId]);
+    }
 }

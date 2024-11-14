@@ -26,6 +26,12 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
+            #sync-attendance {
+                font-size: 20px; 
+                margin-right:20px; 
+                cursor:pointer;
+                color: #339365;
+            }
             a:hover {
                 color: inherit !important;
             }
@@ -126,17 +132,11 @@
                         ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
                     }
 
-                    // Example of sending a message to the server
-                    ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
-
                     setInterval(() => {
                         if(window.CURRENT_ROUTE_NAME === 'dashboard') {
                             // Example of sending a message to the server
                             ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
                         }
-
-                        // Example of sending a message to the server
-                        ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
                     }, 300000); // 300000 milliseconds = 5 minutes
 
                     // Start polling to keep the connection alive
@@ -196,23 +196,70 @@
                         try {
                             const attendance = JSON.parse(message.value);
 
+                            // get highest id from the attendance
+                            const highestId = Math.max.apply(Math, attendance.map(function(o) { return o.id; }));
+
                             if(attendance.length > 0) {
                                 window.ATTENDANCE = [...window.ATTENDANCE, ...attendance];
-                                ws.send(JSON.stringify({ type: 'message', data: 'GET_ATTENDANCE' }));
+                                ws.send(JSON.stringify({ type: 'message', data: `GET_ATTENDANCE|${highestId}` }));
                             }else {
                                 if(window.ATTENDANCE.length > 0) {
-                                    syncAttendance();
+                                    saveAttendance();
                                 }
                             }
                         } catch (e) {
                             console.log(window.ATTENDANCE);
-                            syncAttendance();
+                            if(ws.readyState === WebSocket.OPEN) {
+                                saveAttendance();
+                            }
                             return;
                         }
                     }
                 }
 
-                function syncAttendance() {
+                function syncAttendanceWithDevice() {
+                    const element = document.getElementById('sync-attendance');
+                    
+                    // first check if sync is already in progress or not
+                    if(element.classList.contains('fa-spin')) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Attendance is already being synced!',
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('device.get-last-att-id') }}",
+                        type: 'get',
+                        success: function(response) {
+                            const lastId = response.id;
+                            // first check if websocket is connected or not
+                            if(ws.readyState !== WebSocket.OPEN) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Device is not connected to the server!',
+                                });
+                                return;
+                            }
+                            
+                            element.classList.add('fa-spin');
+                            
+                            ws.send(JSON.stringify({ type: 'message', data: `GET_ATTENDANCE|${lastId}` }));
+                        },
+                        error: function(error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred while fetching the last attendance id!',
+                            });
+                        }
+                    });
+                }
+
+                function saveAttendance() {
                     if(ATTENDANCE.length > 0) {
                         $.ajax({
                             url: "{{ route('device.mark-attendance-bulk') }}",
@@ -226,6 +273,16 @@
                                     fetchStandardAttendanceCards();
                                 }
                                 window.ATTENDANCE = [];
+
+                                // remove the spinner
+                                const element = document.getElementById('sync-attendance');
+                                element.classList.remove('fa-spin');
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Attendance has been synced successfully!',
+                                });
                             },
                             error: function(error) {
                                 console.log(error);

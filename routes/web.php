@@ -65,6 +65,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
+    Route::get('/device/get-last-att-id', [DeviceController::class, 'getLastAttId'])->name('device.get-last-att-id');
+
 });
 
 
