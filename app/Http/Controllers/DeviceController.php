@@ -63,36 +63,26 @@ class DeviceController extends Controller
 
     public function markAttendanceBulk(Request $request)
     {
-        \Log::info($request->all());
 
-        $request->validate([
-            'mac_address' => 'required',
-            'value' => 'required'
-        ]);
+        $device = Device::where([['school_id', auth()->user()->school_id]])->first();
 
-        $device = Device::where([['mac_address', '=', $request->mac_address]])->first();
-
-        if(!$device) {
-            return response()->json(['message' => 'Device not found'], 404);
-        }
-
-        $attendances = json_decode($request->value, true);
-
-        foreach ($attendances as $attendance) {
-            $attendanceTimestamp = Carbon::createFromTimestamp($attendance['timestamp'])->format('Y-m-d H:i:s');
-            $student = Student::where([['rfid', '=', $attendance['rfid']], ['school_id', '=', $device->school_id]])->first();
+        foreach($request->attendance as $att) {
+            $student = Student::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
             if($student) {
-                $this->checkIfAttendanceForStudent($device, $student, $attendanceTimestamp);
+                $attendance[] = $this->checkIfAttendanceForStudent($device, $student, $att['timestamp'], $att['id']);
                 continue;
             }
-            
-            $staff = User::where([['rfid', '=', $attendance['rfid']], ['school_id', '=', $device->school_id]])->first();
+
+            $staff = User::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
             if($staff) {
-                $this->checkIfAttendanceForStaff($device, $staff, $attendanceTimestamp);
+                $attendance[] = $this->checkIfAttendanceForStaff($device, $staff, $att['timestamp'], $att['id']);
+                continue;
             }
+
+            $attendance[] = ['message' => 'No record found'];
         }
 
-        return response()->json(['message' => 'Success']);
+        return response()->json($attendance);
     }
 
     private function checkIfAttendanceForStaff($device, $staff, $timestamp, $controllerId = null)
@@ -179,7 +169,7 @@ class DeviceController extends Controller
     {
         $latestAttendance = Attendance::latest('controller_id')->first();
         $latestStaffAttendance = StaffAttendance::latest('controller_id')->first();
-
+        
         $attendanceId = $latestAttendance->controller_id ?? 0;
         $staffAttendanceId = $latestStaffAttendance->controller_id ?? 0;
 
