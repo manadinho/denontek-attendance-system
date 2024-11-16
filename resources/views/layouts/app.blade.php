@@ -192,6 +192,13 @@
                     }
 
                     if(message.type === 'onGetAttendance') {
+
+                        // to make sure only the sync requested person listens to the response
+                        const element = document.getElementById('sync-attendance');
+                        if(!element.classList.contains('fa-spin')) {;
+                            return;
+                        }
+
                         // check if valid json string or not
                         try {
                             const attendance = JSON.parse(message.value);
@@ -287,6 +294,16 @@
                             error: function(error) {
                                 console.log(error);
                             }
+                        });
+                    } else{
+                        // remove the spinner
+                        const element = document.getElementById('sync-attendance');
+                        element.classList.remove('fa-spin');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'No new attendance to sync!',
                         });
                     }
                 }

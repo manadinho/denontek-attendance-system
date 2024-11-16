@@ -68,14 +68,15 @@ class DeviceController extends Controller
 
         foreach($request->attendance as $att) {
             $student = Student::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
+            $timeStamp = Carbon::createFromTimestamp($att['timestamp'])->subHours(5)->format('Y-m-d H:i:s');
             if($student) {
-                $attendance[] = $this->checkIfAttendanceForStudent($device, $student, $att['timestamp'], $att['id']);
+                $attendance[] = $this->checkIfAttendanceForStudent($device, $student, $timeStamp, $att['id']);
                 continue;
             }
 
             $staff = User::where([['rfid', $att['rfid']], ['school_id', $device->school_id]])->first();
             if($staff) {
-                $attendance[] = $this->checkIfAttendanceForStaff($device, $staff, $att['timestamp'], $att['id']);
+                $attendance[] = $this->checkIfAttendanceForStaff($device, $staff, $timeStamp, $att['id']);
                 continue;
             }
 
@@ -117,17 +118,15 @@ class DeviceController extends Controller
             ->whereDate('check_in', $providedTime->toDateString())
             ->first();
 
-        // Use the time from the provided timestamp
-        $currentTime = $providedTime->format('H:i:s');
-
         // Check if current time is within check-in time
-        if($currentTime >= $schoolSetting->checkin_start && $currentTime <= $schoolSetting->checkin_end) {
+        if($providedTime->format('H:i:s') >= \Carbon\Carbon::parse($schoolSetting->checkin_start)->format('H:i:s') &&
+        $providedTime->format('H:i:s') <= \Carbon\Carbon::parse($schoolSetting->checkin_end)->format('H:i:s')) {
             if(!$todayStudentAttendance) {
                 Attendance::create([
                     'controller_id' => $controllerId,
                     'student_id' => $student->id,
                     'school_id' => $device->school_id,
-                    'check_in' => $providedTime,  // Use provided timestamp for check-in time
+                    'check_in' => $timestamp,  // Use provided timestamp for check-in time
                 ]);
                 return ['message' => 'Check in success'];
             }
@@ -135,10 +134,11 @@ class DeviceController extends Controller
         }
 
         // Check if current time is within check-out time
-        if($currentTime >= $schoolSetting->checkout_start && $currentTime <= $schoolSetting->checkout_end) {
+        if($providedTime->format('H:i:s') >= \Carbon\Carbon::parse($schoolSetting->checkout_start)->format('H:i:s') &&
+        $providedTime->format('H:i:s') <= \Carbon\Carbon::parse($schoolSetting->checkout_end)->format('H:i:s')) {
             if($todayStudentAttendance) {
                 $todayStudentAttendance->update([
-                    'check_out' => $providedTime,  // Use provided timestamp for check-out time
+                    'check_out' => $timestamp,  // Use provided timestamp for check-out time
                 ]);
                 return ['message' => 'Check out success'];
             }
@@ -149,13 +149,13 @@ class DeviceController extends Controller
         $message = '';
 
         if ($todayStudentAttendance) {
-            if ($currentTime > $schoolSetting->checkout_end) {
+            if ($providedTime > $schoolSetting->checkout_end) {
                 $message = 'Check out time ended';
             } else {
                 $message = 'Check out time not started';
             }
         } else {
-            if ($currentTime > $schoolSetting->checkin_end) {
+            if ($providedTime > $schoolSetting->checkin_end) {
                 $message = 'Check in time ended';
             } else {
                 $message = 'Check in time not started';
@@ -167,8 +167,8 @@ class DeviceController extends Controller
 
     public function getLastAttId() 
     {
-        $latestAttendance = Attendance::latest('controller_id')->first();
-        $latestStaffAttendance = StaffAttendance::latest('controller_id')->first();
+        $latestAttendance = Attendance::where([['school_id', auth()->user()->school_id]])->latest('controller_id')->first();
+        $latestStaffAttendance = StaffAttendance::where([['school_id', auth()->user()->school_id]])->latest('controller_id')->first();
         
         $attendanceId = $latestAttendance->controller_id ?? 0;
         $staffAttendanceId = $latestStaffAttendance->controller_id ?? 0;
