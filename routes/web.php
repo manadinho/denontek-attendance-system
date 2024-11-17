@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\StudentReportsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [StudentController::class, 'store'])->name('store');
             Route::get('/delete/{student_id}', [StudentController::class, 'destroy'])->name('destroy');
             Route::post('/mark-manual-attendance', [StudentController::class, 'markManualAttendance'])->name('mark-manual-attendance');
+            Route::post('/get-students-by-standard', [StudentController::class, 'getStudentsByStandard'])->name('get-students-by-standard');
         });
 
         Route::get('/school-settings/edit', [SettingController::class, 'editSchoolSettings'])->name('school-settings.edit');
@@ -67,6 +69,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
     Route::get('/device/get-last-att-id', [DeviceController::class, 'getLastAttId'])->name('device.get-last-att-id');
+
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('/students-date-wise-report', [StudentReportsController::class, 'studentsDateWiseReport'])->name('students-date-wise-report');
+        Route::post('/students-date-wise-report/generate', [StudentReportsController::class, 'studentsDateWiseReportGenerate'])->name('students-date-wise-report.generate');
+    });
 
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Standard;
@@ -108,5 +109,19 @@ class StudentController extends Controller
         }
 
         return redirect()->back()->with('success', 'Attendance marked successfully');
+    }
+
+    public function getStudentsByStandard(Request $request)
+    {
+        try {
+            $request->validate([
+                'standard_id' => 'required',
+            ]);
+    
+            $students = Student::where([['standard_id', '=', $request->standard_id], ['school_id', '=', session('school_id')]])->get(['id', 'name']);
+            return response()->json(['success' => true, 'students' => $students]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+        }
     }
 }
