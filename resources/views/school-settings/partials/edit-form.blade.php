@@ -1,3 +1,38 @@
+<style>
+    input[type="checkbox"] {
+        display:none;
+    }
+    .weekdays-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .weekday {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 900;
+    }
+
+    .weekday input[type="checkbox"] {
+        margin-right: 8px;
+        transform: scale(1.2); /* Make the checkbox slightly larger */
+    }
+    .on {
+        background-color: #98f398;
+        color: green;
+    }
+
+    .off {
+        background-color: #f39898;
+        color: red;
+    }
+
+</style>
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
@@ -35,6 +70,9 @@
                 <x-text-input id="checkout_end" name="checkout_end" type="time" class="mt-1 block w-full" :value="old('checkout_end', $schoolSettings->checkout_end)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_end')" />
             </div>
+            <x-input-label for="checkin_end" :value="__('Week Days')" />
+            <div class="weekdays-container">
+            </div>
         </div>
 
         <div class="flex items-center gap-4">
@@ -54,4 +92,49 @@
     <div class="flex items-center gap-4">
         <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
     </div>
+    <script>
+        const weekOffDays = @json($weekOffDays);
+        console.log(weekOffDays);
+        drawWeekDays();
+        checkWeekDaysStatus();
+
+        function checkWeekDaysStatus() {
+            document.querySelectorAll('.weekday').forEach(label => {
+                const checkbox = label.querySelector('input[type="checkbox"]');
+                
+                if (checkbox.checked) {
+                    label.classList.add('off');
+                    label.classList.remove('on');
+                } else {
+                    label.classList.add('on');
+                    label.classList.remove('off');
+                }
+            })
+        }
+
+        function drawWeekDays() {
+            const weekdays = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+            const weekdaysContainer = document.querySelector('.weekdays-container');
+            weekdays.forEach((weekday, index) => {
+                const label = document.createElement('label');
+                label.classList.add('weekday', 'on');
+                label.innerHTML = `
+                    <input type="checkbox" name="weekdays[]" value="${weekday}">
+                    ${weekday}
+                `;
+
+                // Check if the weekday is a week off day
+                if (weekOffDays.includes(weekday)) {
+                    label.querySelector('input[type="checkbox"]').checked = true;
+                }
+                
+                label.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    checkWeekDaysStatus();
+                });
+                weekdaysContainer.appendChild(label);
+            });
+        }
+    </script>
 </section>

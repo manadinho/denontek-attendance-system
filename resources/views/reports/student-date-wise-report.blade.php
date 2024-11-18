@@ -54,6 +54,14 @@ thead th:first-child {
                     </x-primary-button>
                 </div>
             </div>
+            <div class="mt-3 p-4 sm:p-8 bg-warning txt-white sm:rounded-lg row">
+                <p class="">
+                    <strong>Note</strong><br>
+                    <strong>P:</strong> for present.
+                    <strong>A:</strong> for absent.
+                    <strong>W:</strong> for week off.
+                </p>
+            </div>
             <div style="overflow-x: scroll;">
                 <table class="table table-striped table-bordered mt-5">
                     <thead id="table-header">
@@ -68,6 +76,7 @@ thead th:first-child {
             window.DAYS = [];
             window.DATES = [];
             window.ATTENDANCE_REPORT = [];
+            window.WEEK_OFF_DAYS = @json($weekOffDays);
 
             document.addEventListener('DOMContentLoaded', function() {
                 $('#students').select2();
@@ -271,9 +280,9 @@ thead th:first-child {
                 // Loop through each date from start to end
                 while (startDate <= endDate) {
                     let formattedDate = startDate.toLocaleDateString('en-GB').split('/').reverse().join('-');
-                    let dayLetter = startDate.toLocaleDateString('en-US', { weekday: 'long' })[0];
+                    let day = startDate.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
 
-                    daysArray.push(dayLetter);
+                    daysArray.push(day);
                     datesArray.push(formattedDate);
 
                     // Move to the next day
@@ -304,7 +313,7 @@ thead th:first-child {
                     const [year, month, day] = date.split('-'); // Split the date into parts
                     const formattedDate = `${month}/${day}`;    // Format as "MM/DD"
 
-                    th.textContent = window.DAYS[iterator] + ' ' + month + '/' + day;
+                    th.textContent = window.DAYS[iterator].charAt(0) + ' ' + month + '/' + day;
                     headerRow.appendChild(th);
                 });
             }
@@ -337,7 +346,7 @@ thead th:first-child {
                     row.appendChild(nameCell);
 
                     // Loop through each date and check attendance
-                    window.DATES.forEach(date => {
+                    window.DATES.forEach((date, iterator) => {
                         const attendanceCell = document.createElement('td');
                         attendanceCell.style.fontSize = '10px';
                         attendanceCell.style.textAlign = 'center';
@@ -347,8 +356,13 @@ thead th:first-child {
                             attendanceCell.textContent = 'P'; // Present
                             attendanceCell.style.backgroundColor = '#98f398';
                         } else {
-                            attendanceCell.textContent = 'A'; // Absent
-                            attendanceCell.style.backgroundColor = '#f38585';
+                            if(window.WEEK_OFF_DAYS.includes(window.DAYS[iterator])) {
+                                attendanceCell.textContent = 'W'; // Week Off
+                                attendanceCell.style.backgroundColor = '#f3f398';
+                            } else {
+                                attendanceCell.textContent = 'A'; // Absent
+                                attendanceCell.style.backgroundColor = '#f38585';
+                            }
                         }
 
                         // Show tooltip on hover

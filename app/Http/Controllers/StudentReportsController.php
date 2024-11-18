@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\SchoolSetting;
 use App\Models\Standard;
 use App\Models\Student;
 use Carbon\Carbon;
@@ -13,7 +14,10 @@ class StudentReportsController extends Controller
     public function studentsDateWiseReport() 
     {
         $standards = Standard::where('school_id', session('school_id'))->get();
-        return view("reports.student-date-wise-report", compact('standards'));
+        $school_id = session('school_id');
+        $schoolSettings = SchoolSetting::where('school_id', $school_id)->first();
+        $weekOffDays = explode(',', $schoolSettings->week_off_days);
+        return view("reports.student-date-wise-report", compact('standards', 'weekOffDays'));
     }
 
     public function studentsDateWiseReportGenerate(Request $request)
