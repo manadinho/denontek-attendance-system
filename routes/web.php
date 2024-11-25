@@ -8,7 +8,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\StudentReportsController;
+use App\Http\Controllers\TimetableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,6 +75,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
         Route::get('/students-date-wise-report', [StudentReportsController::class, 'studentsDateWiseReport'])->name('students-date-wise-report');
         Route::post('/students-date-wise-report/generate', [StudentReportsController::class, 'studentsDateWiseReportGenerate'])->name('students-date-wise-report.generate');
+    });
+
+    Route::group(['prefix' => 'staf-time-manage', 'as' => 'staf-time-manage.'], function () {
+        Route::group(['prefix' => 'timetables', 'as' => 'timetables.'], function () {
+            Route::get('/index', [TimetableController::class, 'index'])->name('index');
+            Route::post('/store', [TimetableController::class, 'store'])->name('store');
+            Route::get('/delete/{id}', [TimetableController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::group(['prefix' => 'shifts', 'as' => 'shifts.'], function () {
+            Route::get('/index', [ShiftController::class, 'index'])->name('index');
+            Route::post('/store', [ShiftController::class, 'store'])->name('store');
+            Route::get('/delete/{id}', [ShiftController::class, 'destroy'])->name('destroy');
+            Route::post('/add-timetables', [ShiftController::class, 'addTimetables'])->name('add-timetables');
+        });
     });
 
 });

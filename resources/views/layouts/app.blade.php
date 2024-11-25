@@ -56,6 +56,34 @@
                 }
             }
             .success-animation { margin:150px auto;}
+            .den-modal {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 50;
+                backdrop-filter: blur(5px);
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .den-modal-content {
+                background: #fff;
+                padding: 16px;
+                border-radius: 8px;
+                width: 400px; /* Adjust the width as needed */
+                box-shadow: 3px 3px 14px -2px gray;
+            }
+            .modal-medium {
+                width: 600px !important;
+            }
+
+            .modal-large {
+                width: 1000px !important;
+            }
 
 .checkmark {
     width: 100px;
