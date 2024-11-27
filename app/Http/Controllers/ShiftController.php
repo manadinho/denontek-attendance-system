@@ -14,7 +14,7 @@ class ShiftController extends Controller
 
         $shifts = Shift::where([['school_id', '=', $school_id]])->paginate(15);
 
-        $timetables = Timetable::all();
+        $timetables = Timetable::where('school_id', $school_id)->get();
 
         return view('shifts.index', compact('shifts', 'timetables'));
     }

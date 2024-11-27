@@ -271,10 +271,6 @@
                     const timetable = TIMETABLES.find(timetable => timetable.id == timetable_id);
                     const start = timetable ? + timetable.on_time.split(':')[0] : null;
                     const end = timetable ? + timetable.off_time.split(':')[0] : null;
-                    if(day == 'THURSDAY') {
-                        console.log('start', start);
-                        console.log('end', end);
-                    }
 
                     table_body += `<tr>`;
                     table_body += `<td> ${day}</td>`;

@@ -67,7 +67,7 @@
                 justify-content: center;
                 z-index: 50;
                 backdrop-filter: blur(5px);
-                background-color: rgba(0, 0, 0, 0.5);
+                background-color: rgba(0, 0, 0, 0.5) !important;
             }
 
             .den-modal-content {
@@ -353,6 +353,21 @@
                             console.log(error);
                         }
                     });
+                }
+
+                function formatDate(given_date) {
+                    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+                    const date = new Date(given_date);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = months[date.getMonth()];
+                    const year = date.getFullYear();
+
+                    return `${day} - ${month} - ${year}`;
+                }
+
+                function toggleModal(modalSelector = '.den-modal') {
+                    const modal = document.querySelector(modalSelector);
+                    modal.style.visibility = modal.style.visibility == 'visible' ? 'hidden' : 'visible';
                 }
             </script>
         @endif

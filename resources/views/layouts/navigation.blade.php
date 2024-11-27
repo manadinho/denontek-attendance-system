@@ -68,8 +68,8 @@
                                 <x-dropdown-link :href="route('staf-time-manage.shifts.index')">
                                     {{ __('Shifts') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('school-settings.edit')">
-                                    {{ __('Staff Schedule') }}
+                                <x-dropdown-link :href="route('staf-time-manage.employee-schedule.index')">
+                                    {{ __('Employee Schedule') }}
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>

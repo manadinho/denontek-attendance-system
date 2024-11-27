@@ -6,6 +6,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StandardController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\ShiftController;
@@ -89,6 +90,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/store', [ShiftController::class, 'store'])->name('store');
             Route::get('/delete/{id}', [ShiftController::class, 'destroy'])->name('destroy');
             Route::post('/add-timetables', [ShiftController::class, 'addTimetables'])->name('add-timetables');
+        });
+
+        Route::group(['prefix' => 'employee-schedule', 'as' => 'employee-schedule.'], function () {
+            Route::get('/index', [EmployeeScheduleController::class, 'index'])->name('index');
+            Route::post('/store', [EmployeeScheduleController::class, 'store'])->name('store');
+            Route::post('/delete', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
         });
     });
 

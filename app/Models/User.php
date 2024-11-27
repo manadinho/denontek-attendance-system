@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Standard::class, 'standard_user', 'user_id', 'standard_id');
     }
+
+    public function shifts()
+    {
+        return $this->belongsToMany(Shift::class)->withPivot('start_date', 'end_date', 'created_by');
+    }
 }

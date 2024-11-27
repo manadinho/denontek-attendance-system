@@ -122,14 +122,14 @@ thead th:first-child {
                 });
             
                 function getDate( element ) {
-                var date;
-                try {
-                    date = $.datepicker.parseDate( dateFormat, element.value );
-                } catch( error ) {
-                    date = null;
-                }
-            
-                return date;
+                    var date;
+                    try {
+                        date = $.datepicker.parseDate( dateFormat, element.value );
+                    } catch( error ) {
+                        date = null;
+                    }
+                
+                    return date;
                 }
 
                 document.querySelector('#standard').addEventListener('change', function() {
