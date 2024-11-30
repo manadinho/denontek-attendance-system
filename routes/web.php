@@ -6,6 +6,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StandardController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\EmployeeReportController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\GoogleLoginController;
@@ -76,6 +77,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
         Route::get('/students-date-wise-report', [StudentReportsController::class, 'studentsDateWiseReport'])->name('students-date-wise-report');
         Route::post('/students-date-wise-report/generate', [StudentReportsController::class, 'studentsDateWiseReportGenerate'])->name('students-date-wise-report.generate');
+        Route::get('/employees-checkin-checkout-report', [EmployeeReportController::class, 'checkinCheckoutReport'])->name('employees-checkin-checkout-report');
+        Route::post('/employees-checkin-checkout-report/generate', [EmployeeReportController::class, 'checkinCheckoutReportGenerate'])->name('employees-checkin-checkout-report.generate');
     });
 
     Route::group(['prefix' => 'staf-time-manage', 'as' => 'staf-time-manage.'], function () {

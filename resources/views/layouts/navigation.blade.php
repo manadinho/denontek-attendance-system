@@ -93,6 +93,11 @@
                                 </x-dropdown-link>
 
                                 @If(userType() != 'teacher')
+                                    <x-dropdown-link :href="route('reports.employees-checkin-checkout-report')">
+                                        {{ __('Employees Check-in/Check-out Report') }}
+                                    </x-dropdown-link>
+                                @endif
+                                @If(userType() != 'teacher')
                                     <x-dropdown-link :href="route('school-settings.edit')">
                                         {{ __('Students Present/Absent Report') }}
                                     </x-dropdown-link>

@@ -89,7 +89,7 @@ class DeviceController extends Controller
     private function checkIfAttendanceForStaff($device, $staff, $timestamp, $controllerId = null)
     {
         $recentAttendance = StaffAttendance::where('staff_id', $staff->id)
-                            ->where('created_at', '>=', Carbon::now()->subMinutes(20))
+                            ->where('timestamp', '>=', Carbon::parse($timestamp)->subMinutes(20))
                             ->first();
         if($recentAttendance) {
             return ['message' => 'Multiple Swipes'];

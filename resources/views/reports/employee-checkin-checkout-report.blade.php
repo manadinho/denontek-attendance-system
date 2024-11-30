@@ -16,7 +16,7 @@ thead th:first-child {
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Students Date Wise Report') }}
+            {{ __('Employee Check-in/Check-out Report') }}
         </h2>
     </x-slot>
 
@@ -34,19 +34,18 @@ thead th:first-child {
                     <input type="text" id="to" name="to" class="form-control rounded" autocomplete="off">
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="Standars">Select Standard</label>
-                    <select name="standard" id="standard" class="form-control rounded" required>
-                        <option value="">Select Standard</option>
-                        @foreach($standards as $standard)
-                            <option value="{{ $standard->id }}">{{ $standard->name }}</option>
-                        @endforeach
+                    <label for="employees">Select Employees</label>
+                    <select name="employees[]" id="employees" class="form-control rounded" multiple="multiple">
+                        <option value="select_all">Select All</option>
+                        @forelse($employees as $employee)
+                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                        @empty
+                            <option value="">No Employees found</option>
+                        @endforelse
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="Standars">Select Students</label>
-                    <select name="students[]" id="students" class="form-control rounded" multiple="multiple">
-                        <option value="">Select Student</option>
-                    </select>
+                    <!-- Nothing to show -->
                 </div>
                 <div class="form-group col-md-6 mt-2">
                     <x-primary-button id="submit-btn">
@@ -54,18 +53,21 @@ thead th:first-child {
                     </x-primary-button>
                 </div>
             </div>
-            <div class="mt-3 p-4 sm:p-8 bg-warning txt-white sm:rounded-lg row">
-                <p class="">
-                    <strong>Note</strong><br>
-                    <strong>P:</strong> for present.
-                    <strong>A:</strong> for absent.
-                    <strong>W:</strong> for week off.
-                </p>
-            </div>
             <div style="overflow-x: scroll;">
                 <table class="table table-striped table-bordered mt-5">
                     <thead id="table-header">
-                        
+                        <th>date</th>
+                        <th>day</th>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>shift</th>
+                        <th>timetable</th>
+                        <th>on time</th>
+                        <th>off time</th>
+                        <th>checkin</th>
+                        <th>checkout</th>
+                        <th>in status</th>
+                        <th>out status</th>
                     </thead>
                     <tbody id="table-body">
                     </tbody>
@@ -79,26 +81,26 @@ thead th:first-child {
             window.WEEK_OFF_DAYS = @json($weekOffDays);
 
             document.addEventListener('DOMContentLoaded', function() {
-                $('#students').select2();
+                $('#employees').select2();
                 // Handle selection change
-                $('#students').on('select2:select', function(e) {
+                $('#employees').on('select2:select', function(e) {
                     var selectedValue = e.params.data.id;
                     
                     if (selectedValue === 'select_all') {
                         // If "Select All" is selected, select all other options
-                        $('#students > option').prop("selected", true);
-                        $('#students').trigger("change");
+                        $('#employees > option').prop("selected", true);
+                        $('#employees').trigger("change");
                     }
                 });
 
                 // Handle deselecting "Select All"
-                $('#students').on('select2:unselect', function(e) {
+                $('#employees').on('select2:unselect', function(e) {
                     var unselectedValue = e.params.data.id;
                     
                     if (unselectedValue === 'select_all') {
                         // If "Select All" is unselected, deselect all options
-                        $('#students > option').prop("selected", false);
-                        $('#students').trigger("change");
+                        $('#employees > option').prop("selected", false);
+                        $('#employees').trigger("change");
                     }
                 });
 
@@ -132,64 +134,17 @@ thead th:first-child {
                     return date;
                 }
 
-                document.querySelector('#standard').addEventListener('change', function() {
-                    // unselect all students
-                    $('#students > option').prop("selected", false);
-                    $('#students').trigger("change");
-                    
-                    var standard = this.value;
-                    var url = "{{ route('students.get-students-by-standard') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            standard_id: standard
-                        },
-                        success: function(response) {
-                            if(!response.success) {     
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Attendance is already being synced!',
-                                });l
-                            }
-
-                            var options = '<option value="select_all">Select All</option>';
-                            response.students.forEach(function(student) {
-                                options += '<option value="'+student.id+'">'+student.name+'</option>';
-                            });
-
-                            document.querySelector('#students').innerHTML = options;
-
-
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    })
-                });
-
                 document.querySelector('#submit-btn').addEventListener('click', async function() {
                     let submitBtn = this;
                     submitBtn.disabled = true;
                     submitBtn.textContent = 'Generating Report...';
 
-                    // reset the table, ATTENDANCE_REPORT, DAYS and DATES
-                    document.querySelector('#table-header').innerHTML = '';
-                    document.querySelector('#table-body').innerHTML = '';
-
-                    window.ATTENDANCE_REPORT = [];
-                    window.DAYS = [];
-                    window.DATES = [];
-
                     var from = document.querySelector('#from').value;
                     var to = document.querySelector('#to').value;
-                    var standard = document.querySelector('#standard').value;
-                    var students = $('#students').val();
+                    var employees = $('#employees').val();
 
                     // validate data
-                    if (!from || !to || !standard || !students) {
+                    if (!from || !to || !employees) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -212,14 +167,12 @@ thead th:first-child {
                         return;
                     }
 
-                    generateDatesAndDays(from, to);
-
-                    // students should not be empty and should be an array
-                    if (!Array.isArray(students) || students.length === 0) {
+                    // employees should not be empty and should be an array
+                    if (!Array.isArray(employees) || employees.length === 0) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Please select students!',
+                            text: 'Please select employees!',
                         });
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Generate Report';
@@ -227,77 +180,91 @@ thead th:first-child {
                     }
 
 
-                    students = students.filter(function(student) {
-                        return student !== 'select_all';
+                    employees = employees.filter(function(employee) {
+                        return employee !== 'select_all';
                     });
 
-                    const chunkSize = 5;
-                    // loop over students and give two students to generate report method
-                    for (let i = 0; i < students.length; i += chunkSize) {
-                        // Create a chunk of students
-                        let _students = students.slice(i, i + chunkSize);
-                        
-                        // Call the method and pass the _students
-                        await generateReport(from, to, _students);
-                    }
+                    document.querySelector('#table-body').innerHTML = '';
 
-                    // Generate the report
-                    drawReportHeader();
-                    drawReportBody();
+                    generateReport(from, to, employees);
                 });
             });
 
-            function generateReport(from, to, students) {
-                return new Promise((resolve, reject) => {
-                    
-                    var url = "{{ route('reports.students-date-wise-report.generate') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            from,
-                            to,
-                            students
-                        },
-                        success: function(response) {
-                            
-                            if(response.success) {     
-                                window.ATTENDANCE_REPORT = [...window.ATTENDANCE_REPORT, ...response.data];
-                            }
-
-                            resolve();
-                        },
-                        error: function(error) {
-                            console.log(error);
-                            resolve();
+            function generateReport(from, to, employees) { 
+                var url = "{{ route('reports.employees-checkin-checkout-report.generate') }}";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        from,
+                        to,
+                        employees
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            let html = '';
+                            Object.values(response.data).forEach(data => {
+                                let row = '';
+                                if(data.day_of_week) {
+                                    row = `<tr>
+                                    <td>${data.date}</td>
+                                    <td>${data.day}</td>
+                                    <td colspan="10" style="background:#f3f398 !important; text-align: center; font-weight: bold;">WEEK OFF DAY</td>
+                                </tr>`;
+                                } else if(!data.checkin && !data.checkout) {
+                                    row = `<tr>
+                                    <td>${data.date}</td>
+                                    <td>${data.day}</td>
+                                    <td>${data.employeeId}</td>
+                                    <td>${data.employee}</td>
+                                    <td>${data.shift}</td>
+                                    <td>${data.timetable}</td>
+                                    <td>${data.on_time}</td>
+                                    <td>${data.off_time}</td>
+                                    <td colspan="4" style="background:#f38585 !important; text-align: center; font-weight: bold;">ABSENT</td>
+                                    </tr>`;
+                                } else {
+                                    row = `<tr>
+                                    <td>${data.date}</td>
+                                    <td>${data.day}</td>
+                                    <td>${data.employeeId}</td>
+                                    <td>${data.employee}</td>
+                                    <td>${data.shift}</td>
+                                    <td>${data.timetable}</td>
+                                    <td>${data.on_time}</td>
+                                    <td>${data.off_time}</td>
+                                    <td>${data.checkin ?? '-'}</td>
+                                    <td>${data.checkout ?? '-'}</td>
+                                    <td>${data.checkin_status}</td>
+                                    <td>${data.checkout_status}</td>
+                                </tr>`;
+                                }
+                                
+                                html += row;
+                            });
+                            document.querySelector('#table-body').innerHTML = html;
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: response.message,
+                            });
                         }
-                    });
+
+                        const submitBtn = document.querySelector('#submit-btn');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Generate Report';
+                    },
+                    error: function(error) {
+                        const submitBtn = document.querySelector('#submit-btn');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Generate Report';
+                        console.log(error);
+                    }
                 });
             }
 
-            function generateDatesAndDays(fromDate, toDate) {
-                // Parse the fromDate and toDate
-                let startDate = new Date(fromDate);
-                let endDate = new Date(toDate);
-                let daysArray = [];
-                let datesArray = [];
-
-                // Loop through each date from start to end
-                while (startDate <= endDate) {
-                    let formattedDate = startDate.toLocaleDateString('en-GB').split('/').reverse().join('-');
-                    let day = startDate.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-
-                    daysArray.push(day);
-                    datesArray.push(formattedDate);
-
-                    // Move to the next day
-                    startDate.setDate(startDate.getDate() + 1);
-                }
-
-                window.DAYS = [...daysArray];
-                window.DATES = [...datesArray];
-            }
 
             function drawReportHeader() {
                 const headerRow = document.getElementById('table-header');
