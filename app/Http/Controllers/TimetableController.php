@@ -24,10 +24,6 @@ class TimetableController extends Controller
             'leave_early_time' => 'required|integer',
             'on_time' => 'required|date_format:H:i',
             'off_time' => 'required|date_format:H:i',
-            'checkin_start' => 'required|date_format:H:i',
-            'checkin_end' => 'required|date_format:H:i',
-            'checkout_start' => 'required|date_format:H:i',
-            'checkout_end' => 'required|date_format:H:i',
         ]);
 
         $data['school_id'] = session('school_id');

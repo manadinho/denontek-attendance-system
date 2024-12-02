@@ -34,27 +34,11 @@
                             <label for="on_time">On Time</label>
                             <input id="on_time" class="form-control rounded" type="time" name="on_time" value="" autofocus>
                         </div>
-                        <div class="form-group">
-                            <label for="checkin_start">Checkin Start</label>
-                            <input id="checkin_start" class="form-control rounded" type="time" name="checkin_start" value="" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="checkout_start">Checkout Start</label>
-                            <input id="checkout_start" class="form-control rounded" type="time" name="checkout_start" value="" autofocus>
-                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="off_time">Off Time</label>
                             <input id="off_time" class="form-control rounded" type="time" name="off_time" value="" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="checkin_end">Checkin End</label>
-                            <input id="checkin_end" class="form-control rounded" type="time" name="checkin_end" value="" autofocus>
-                        </div>
-                        <div class="form-group">
-                            <label for="checkout_end">Checkout End</label>
-                            <input id="checkout_end" class="form-control rounded" type="time" name="checkout_end" value="" autofocus>
                         </div>
                     </div>
                 </div>

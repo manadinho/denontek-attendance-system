@@ -36,7 +36,7 @@
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="5">No Timetable Found</td>
+                            <td colspan="6">No Timetable Found</td>
                         </tr>
                     @endforelse
                 </tbody>

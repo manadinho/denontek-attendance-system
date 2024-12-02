@@ -50,10 +50,20 @@ class DatabaseSeeder extends Seeder
             ];
             User::updateOrCreate(['email' => $userData['email']], $userData);
 
+            // seed the superamdin user
+            $superAdminData = [
+                'school_id' => $shool->id,
+                'name'      => 'Super Admin',
+                'email'     => 'superadmin@attendance.com',
+                'password' => \Hash::make('Pa$$@0987'),
+                'type'      => 'superadmin',
+            ];
+            User::updateOrCreate(['email' => $superAdminData['email']], $superAdminData);
+
             // Create Devices
             $deviceData = [[
                 'school_id'  => $shool->id,
-                'mac_address' => '84:CC:A8:5E:56:20',
+                'mac_address' => '3859534809',
                 'chip_id' => '3859534809',
                 'type'       => 'push_to_server',
                 'created_at' => now(),

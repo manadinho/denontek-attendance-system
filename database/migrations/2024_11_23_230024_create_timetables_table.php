@@ -17,10 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('on_time');
             $table->string('off_time');
-            $table->string('checkin_start');
-            $table->string('checkin_end');
-            $table->string('checkout_start');
-            $table->string('checkout_end');
             $table->integer('late_time');
             $table->integer('leave_early_time');
             $table->timestamps();

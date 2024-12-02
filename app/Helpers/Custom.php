@@ -35,3 +35,10 @@ function currentGuard()
 {
     return isOwner() ? 'owner' : 'web';
 }
+
+function getUploadFileName($fileName)
+{
+    $fileName = explode('_', $fileName);
+    unset($fileName[0]);
+    return implode('_', $fileName);
+}

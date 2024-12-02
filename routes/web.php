@@ -13,6 +13,7 @@ use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\StudentReportsController;
 use App\Http\Controllers\TimetableController;
+use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,19 +44,19 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/standards-with-attendance', [HomeController::class, 'standardsWithAttendnce'])->name('standards-with-attendance'); 
 
         Route::group(['prefix' => 'staff', 'as' => 'staff.'], function() {
-            Route::get('/index', [StaffController::class, 'index'])->name('index');
+            Route::get('/', [StaffController::class, 'index'])->name('index');
             Route::post('/store', [StaffController::class, 'store'])->name('store');
             Route::get('/delete/{teacher_id}', [StaffController::class, 'destroy'])->name('destroy');
         });
 
         Route::group(['prefix' => 'standards', 'as' => 'standards.'], function () {
-            Route::get('/index', [StandardController::class, 'index'])->name('index');
+            Route::get('/', [StandardController::class, 'index'])->name('index');
             Route::post('/store', [StandardController::class, 'store'])->name('store');
             Route::get('/delete/{standard_id}', [StandardController::class, 'destroy'])->name('destroy');
         });
 
         Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
-            Route::get('/index', [StudentController::class, 'index'])->name('index');
+            Route::get('/', [StudentController::class, 'index'])->name('index');
             Route::post('/store', [StudentController::class, 'store'])->name('store');
             Route::get('/delete/{student_id}', [StudentController::class, 'destroy'])->name('destroy');
             Route::post('/mark-manual-attendance', [StudentController::class, 'markManualAttendance'])->name('mark-manual-attendance');
@@ -83,25 +84,30 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'staf-time-manage', 'as' => 'staf-time-manage.'], function () {
         Route::group(['prefix' => 'timetables', 'as' => 'timetables.'], function () {
-            Route::get('/index', [TimetableController::class, 'index'])->name('index');
+            Route::get('/', [TimetableController::class, 'index'])->name('index');
             Route::post('/store', [TimetableController::class, 'store'])->name('store');
             Route::get('/delete/{id}', [TimetableController::class, 'destroy'])->name('destroy');
         });
 
         Route::group(['prefix' => 'shifts', 'as' => 'shifts.'], function () {
-            Route::get('/index', [ShiftController::class, 'index'])->name('index');
+            Route::get('/', [ShiftController::class, 'index'])->name('index');
             Route::post('/store', [ShiftController::class, 'store'])->name('store');
             Route::get('/delete/{id}', [ShiftController::class, 'destroy'])->name('destroy');
             Route::post('/add-timetables', [ShiftController::class, 'addTimetables'])->name('add-timetables');
         });
 
         Route::group(['prefix' => 'employee-schedule', 'as' => 'employee-schedule.'], function () {
-            Route::get('/index', [EmployeeScheduleController::class, 'index'])->name('index');
+            Route::get('/', [EmployeeScheduleController::class, 'index'])->name('index');
             Route::post('/store', [EmployeeScheduleController::class, 'store'])->name('store');
             Route::post('/delete', [EmployeeScheduleController::class, 'destroy'])->name('destroy');
         });
     });
 
+    Route::group(['prefix' => 'imports', 'as' => 'imports.'], function () {
+        Route::get('/', [ImportController::class, 'index'])->name('index');
+        Route::post('/import', [ImportController::class, 'import'])->name('store');
+        Route::get('/import/failed/{uploadId}', [ImportController::class, 'showFailed'])->name('show-failed');
+    });
 });
 
 
