@@ -42,7 +42,7 @@
                     <select id="registration-device-select" class="form-control rounded" required onchange="selectRegistrationDevice(this)">
                         <option value="">Select Device</option>
                         @foreach($registrationDevices as $device)
-                            <option value="{{ $device->chip_id }}">{{ $device->name }}</option>
+                            <option value="{{ str_replace(':', '-', $device->chip_id) }}">{{ $device->name }}</option>
                         @endforeach
                     </select>
                 </div>

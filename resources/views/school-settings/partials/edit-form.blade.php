@@ -91,6 +91,7 @@
     </form>
     <div class="flex items-center gap-4">
         <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
+        <x-danger-button id="pair_with_device">{{ __('Pair Devices') }}</x-danger-button>
     </div>
     <script>
         const weekOffDays = @json($weekOffDays);

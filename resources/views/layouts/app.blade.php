@@ -214,15 +214,16 @@
                     
                     if(message.type === 'register') {
                         const messageValue = message.value;
-                        console.log(window.selectedRegistrationDevice, messageValue.split('|')[1], messageValue.split('|')[1] == window.selectedRegistrationDevice)
-                        if(messageValue.split('|')[1] == window.selectedRegistrationDevice) {
+                        if(messageValue.split('|')[1].replace(/:/g, '-') == window.selectedRegistrationDevice.replace(/:/g, '-')) {
                             $('#rfid').val(messageValue.split('|')[0]);
                         }
                     }
 
                     if(message.type === 'status') {
-                        $(`#device-chip-${message.value} .circle-online`).removeClass('hidden');
-                        $(`#device-chip-${message.value} .circle-offline`).addClass('hidden');
+                        const mac = message.value.replace(/:/g, '-');
+                        
+                        $(`#device-chip-${mac} .circle-online`).removeClass('hidden');
+                        $(`#device-chip-${mac} .circle-offline`).addClass('hidden');
                     }
 
                     if(message.type === 'onGetAttendance') {

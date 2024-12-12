@@ -57,6 +57,11 @@
             const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
             window.ws.send(JSON.stringify({ type: 'message', data: `DATESYNC|${formattedDate}` }))
         });
+
+        const pairWithDevice = document.getElementById('pair_with_device');
+        pairWithDevice.addEventListener('click', function() {
+            window.ws.send(JSON.stringify({ type: 'message', data: 'PAIR' }))
+        });
     </script>
     
 </x-app-layout>
