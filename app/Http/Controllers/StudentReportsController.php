@@ -46,7 +46,7 @@ class StudentReportsController extends Controller
 
                 // Get attendance records for the student within the date range
                 $attendanceRecords = Attendance::where('student_id', $student->id)
-                    ->whereBetween('check_in', [$fromDate, $toDate])
+                    ->whereBetween('timestamp', [$fromDate, $toDate])
                     ->get();
 
                 // Initialize the attendance structure for the student
@@ -54,8 +54,25 @@ class StudentReportsController extends Controller
 
                 // Populate attendance data in the desired format
                 foreach ($attendanceRecords as $att) {
-                    $dateKey = Carbon::parse($att->check_in)->format('Y-m-d');
-                    $attendanceData[$dateKey] = $att->check_in . '|' . ($att->check_out ?? '');
+                    $dateKey = Carbon::parse($att->timestamp)->format('Y-m-d');
+
+                    $filteredRecords = $attendanceRecords->where('student_id', $studentId)
+                                     ->filter(function ($record) use ($dateKey) {
+                                         return Carbon::parse($record->timestamp)->toDateString() === $dateKey;
+                                     });
+
+                    // first entry of the day id checkin and last entry is checkout
+                    $checkIn = $filteredRecords->first()->timestamp;
+                    // convert timestamp to time
+                    $checkIn = Carbon::parse($checkIn)->format('H:i:s');
+
+                    $checkOut = '';
+                    if ($filteredRecords->count() > 1) {
+                        $checkOut = $filteredRecords->last()->timestamp;
+                        $checkOut = Carbon::parse($checkOut)->format('H:i:s');
+                    }
+
+                    $attendanceData[$dateKey] = $checkIn . '|' . ($checkOut ?? '');
                 }
 
                 // Add the student and their attendance data to the main array

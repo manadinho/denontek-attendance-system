@@ -23,7 +23,7 @@ class HomeController extends Controller
         $standardQuery = Standard::withCount('students')
                         ->withCount(['students as present_students_count' => function($query) {
                             $query->whereHas('attendances', function($query) {
-                                $query->whereDate('check_in', Carbon::today());
+                                $query->whereDate('timestamp', Carbon::today());
                             });
                         }])
                         ->where('school_id', $school_id);

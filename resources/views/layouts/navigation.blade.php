@@ -97,11 +97,11 @@
                                         {{ __('Employees Check-in/Check-out Report') }}
                                     </x-dropdown-link>
                                 @endif
-                                @If(userType() != 'teacher')
+                                <!-- @If(userType() != 'teacher')
                                     <x-dropdown-link :href="route('school-settings.edit')">
                                         {{ __('Students Present/Absent Report') }}
                                     </x-dropdown-link>
-                                @endif
+                                @endif -->
                             </x-slot>
                         </x-dropdown>
                     </div>

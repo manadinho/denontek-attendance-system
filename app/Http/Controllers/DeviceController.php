@@ -107,62 +107,21 @@ class DeviceController extends Controller
 
     private function checkIfAttendanceForStudent($device, $student, $timestamp, $controllerId = null)
     {
-        // Convert the provided timestamp to a Carbon instance
-        $providedTime = Carbon::parse($timestamp);
-        
-        $schoolSetting = SchoolSetting::where('school_id', $device->school_id)->first();
-        $todayStudentAttendance = null;
-
-        // Use the provided timestamp date instead of today's date
-        $todayStudentAttendance = Attendance::where('student_id', $student->id)
-            ->whereDate('check_in', $providedTime->toDateString())
-            ->first();
-
-        // Check if current time is within check-in time
-        if($providedTime->format('H:i:s') >= \Carbon\Carbon::parse($schoolSetting->checkin_start)->format('H:i:s') &&
-        $providedTime->format('H:i:s') <= \Carbon\Carbon::parse($schoolSetting->checkin_end)->format('H:i:s')) {
-            if(!$todayStudentAttendance) {
-                Attendance::create([
-                    'controller_id' => $controllerId,
-                    'student_id' => $student->id,
-                    'school_id' => $device->school_id,
-                    'check_in' => $timestamp,  // Use provided timestamp for check-in time
-                ]);
-                return ['message' => 'Check in success'];
-            }
-            return ['message' => 'Already checked in'];
+        $recentAttendance = Attendance::where('student_id', $student->id)
+                            ->where('timestamp', '>=', Carbon::parse($timestamp)->subMinutes(20))
+                            ->first();
+        if($recentAttendance) {
+            return ['message' => 'Multiple Swipes'];
         }
 
-        // Check if current time is within check-out time
-        if($providedTime->format('H:i:s') >= \Carbon\Carbon::parse($schoolSetting->checkout_start)->format('H:i:s') &&
-        $providedTime->format('H:i:s') <= \Carbon\Carbon::parse($schoolSetting->checkout_end)->format('H:i:s')) {
-            if($todayStudentAttendance) {
-                $todayStudentAttendance->update([
-                    'check_out' => $timestamp,  // Use provided timestamp for check-out time
-                ]);
-                return ['message' => 'Check out success'];
-            }
-            return ['message' => 'Check in first'];
-        }
+        Attendance::create([
+            'controller_id' => $controllerId,
+            'student_id' => $student->id,
+            'school_id' => $device->school_id,
+            'timestamp' => $timestamp,
+        ]);
 
-        // Determine appropriate message for the current time
-        $message = '';
-
-        if ($todayStudentAttendance) {
-            if ($providedTime > $schoolSetting->checkout_end) {
-                $message = 'Check out time ended';
-            } else {
-                $message = 'Check out time not started';
-            }
-        } else {
-            if ($providedTime > $schoolSetting->checkin_end) {
-                $message = 'Check in time ended';
-            } else {
-                $message = 'Check in time not started';
-            }
-        }
-
-        return ['message' => $message];
+        return ['message' => 'Success'];
     }
 
     public function getLastAttId() 
