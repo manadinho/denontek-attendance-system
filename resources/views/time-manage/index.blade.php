@@ -30,13 +30,13 @@
                         <td>{{ $timetable->late_time }}</td>
                         <td>{{ $timetable->leave_early_time }}</td>
                         <td>
-                            <a href="javascript:void(0)" title="Edit" onclick="editTimetable({{$timetable}})"><i class="fas fa-edit"></i></a>
+                            <a href="javascript:void(0)" class="pr-2" title="Edit" onclick="editTimetable({{$timetable}})"><i class="fas fa-edit"></i></a>
                             <a href="javascript:void(0)" title="Delete" onclick="deleteTimetable('{{route('staf-time-manage.timetables.destroy', $timetable->id)}}')"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="6">No Timetable Found</td>
+                            <td colspan="6" class="text-center">No Timetable Found</td>
                         </tr>
                     @endforelse
                 </tbody>

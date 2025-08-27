@@ -69,7 +69,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8">No Files Uploaded Yet</td>
+                            <td colspan="8" class="text-center">No Files Uploaded Yet</td>
                         </tr>
                     @endforelse
                 </tbody>

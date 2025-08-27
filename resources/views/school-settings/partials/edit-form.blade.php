@@ -59,18 +59,18 @@
                 <x-input-error class="mt-2" :messages="$errors->get('checkin_end')" />
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 pt-2">
                 <x-input-label for="checkout_start" :value="__('CheckOut Start')" />
                 <x-text-input id="checkout_start" name="checkout_start" type="time" class="mt-1 block w-full" :value="old('checkout_start', $schoolSettings->checkout_start)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_start')" />
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 pt-2">
                 <x-input-label for="checkout_end" :value="__('CheckOut End')" />
                 <x-text-input id="checkout_end" name="checkout_end" type="time" class="mt-1 block w-full" :value="old('checkout_end', $schoolSettings->checkout_end)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_end')" />
             </div>
-            <x-input-label for="checkin_end" :value="__('Week Days')" />
+            <x-input-label class="pt-2 pb-2" for="checkin_end" :value="__('Week Days')" />
             <div class="weekdays-container">
             </div>
         </div>
@@ -89,7 +89,7 @@
             @endif
         </div>
     </form>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 pt-2">
         <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
         <x-danger-button id="pair_with_device">{{ __('Pair Devices') }}</x-danger-button>
     </div>

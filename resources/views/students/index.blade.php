@@ -48,13 +48,13 @@
                             <td>{{ $student->guardian_relation }}</td>
                             <td>{{ $student->guardian_contact }}</td>
                             <td>
-                                <a href="javascript:void(0)" onclick="editStudent({{$student}})"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="pr-2" onclick="editStudent({{$student}})"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" onclick="deleteStudent('{{route('students.destroy', $student->id)}}')"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">No Students Found</td>
+                            <td colspan="6" class="text-center">No Students Found</td>
                         </tr>
                     @endforelse
                 </tbody>

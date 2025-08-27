@@ -28,7 +28,7 @@
                             <td>{{ $staff->type }}</td>
                             <td>{{ $staff->created_at->format('Y-m-d') }}</td>
                             <td>
-                                <a href="javascript:void(0)" title="Edit" onclick="editStaff({{$staff}})"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" title="Edit" class="pr-2" onclick="editStaff({{$staff}})"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" title="Delete" onclick="deleteStaff('{{route('staff.destroy', $staff->id)}}')"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>

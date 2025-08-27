@@ -16,7 +16,7 @@
                     <th>Name</th>
                     <th>Chip ID</th>
                     <th>Date Added</th>
-                    <th>Date Updated</th>
+                    <!-- <th>Date Updated</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                         </td>
                         <td>{{ $device->chip_id }}</td>
                         <td>{{ $device->created_at }}</td>
-                        <td>{{ $device->updated_at }}</td>
+                        <!-- <td>{{ $device->updated_at }}</td> -->
                     </tr>
                 @empty
                     <tr>

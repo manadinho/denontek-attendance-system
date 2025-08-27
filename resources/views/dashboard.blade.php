@@ -29,6 +29,63 @@
         -moz-box-shadow: 0px 1px 11px 0px rgba(0,0,0,0.75);
         min-height: 135px;
     }
+    body {
+        background-color: #f8f9fa;
+    }
+    
+    .device-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .device-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .device-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+    
+    .icon-router { background: linear-gradient(135deg, #e7e9ec, #7c7d80); }
+    
+    .status-online {
+        background-color: #d1e7dd;
+        color: #0a3622;
+        border: 1px solid #a3cfbb;
+    }
+    
+    .status-offline {
+        background-color: #f8d7da;
+        color: #58151c;
+        border: 1px solid #f1aeb5;
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+    
+    .dot-online {
+        background-color: #198754;
+        box-shadow: 0 0 8px rgba(25, 135, 84, 0.4);
+    }
+    
+    .dot-offline {
+        background-color: #dc3545;
+    }
+        
 </style>
 <x-app-layout>
     <x-slot name="header">
@@ -39,7 +96,7 @@
 
 
     <h2 class="fs-3 fw-bold mt-3 mb-3">Device Statuses</h2>
-    <div class="row">
+    <div class="d-flex row">
         @forelse($devices as $device)
             @include("partials.device-status-card", ['device' => $device])
         @empty

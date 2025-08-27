@@ -1,23 +1,37 @@
-<div class="col-xl-3 col-lg-6 p-1">
-    <div class="card card-stats mb-xl-0">
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <span class="h2 font-weight-bold mb-0">{{$standard->name}}</span>
-                </div>
-                <div class="col-auto">
-                    <div class="p-2 icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="fs-4 fas fa-chalkboard-teacher"></i>
-                    </div>
-                </div>
-            </div>
-            <p class="mt-3 mb-0 text-muted text-sm">
-                <div class="row">
-                    <div class="col-md-4 fs-6 fw-bold"><span class="text-dark"><i class="fas fa-users"></i> Total: {{$standard->students_count}}</span></div>
-                    <div class="col-md-4 fs-6 fw-bold"><span class="text-success"><i class="fas fa-check"></i> Present: {{ $standard->present_students_count }}</span></div>
-                    <div class="col-md-4 fs-6 fw-bold"><span class="text-danger"><i class="fas fa-times"></i> Absent: {{ $standard->students_count - $standard->present_students_count }}</span></div>
-                </div>
-            </p>
+<div class="w-25" style="width:316.25px; height:110px; margin:0; margin-bottom:20px;">
+  <div class="card device-card h-100">
+    <div class="d-flex card-body h-100">
+      <div class="d-flex align-items-center flex-grow-1 min-w-0">
+        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-2 flex-shrink-0" style="width:42px; height:42px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><g><path d="M31,26c-0.6,0-1-0.4-1-1V12c0-0.6,0.4-1,1-1s1,0.4,1,1v13C32,25.6,31.6,26,31,26z"/></g><g><path d="M16,21c-0.2,0-0.3,0-0.5-0.1l-15-8C0.2,12.7,0,12.4,0,12s0.2-0.7,0.5-0.9l15-8c0.3-0.2,0.6-0.2,0.9,0l15,8c0.3,0.2,0.5,0.5,0.5,0.9s-0.2,0.7-0.5,0.9l-15,8C16.3,21,16.2,21,16,21z"/></g><path d="M17.4,22.6C17,22.9,16.5,23,16,23s-1-0.1-1.4-0.4L6,18.1V22c0,3.1,4.9,6,10,6s10-2.9,10-6v-3.9L17.4,22.6z"/></svg>
         </div>
+        <div class="min-w-0">
+          <h6 class="mb-0 fw-bold text-dark text-truncate" style="font-size:1.05rem; line-height:1.1; max-width:138px;">
+              {{$standard->name}}
+          </h6>
+          <small class="text-muted d-block text-truncate" style="font-size:0.8rem; line-height:1.1; max-width:138px;">
+              {{$standard->students_count}} Student(s)
+          </small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-2">
+        <div class="d-flex align-items-center gap-1">
+          <span class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.2 4.8 12 3.4 13.4 9 19 21 7 19.6 5.6z"/></svg>
+          </span>
+          <span class="fw-semibold text-success" style="font-size:1rem;">
+            {{ $standard->present_students_count }}
+          </span>
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <span class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 5.7 12 12 5.7 5.7 4.3 7.1 10.6 13.4 4.3 19.7 5.7 21.1 12 14.8 18.3 21.1 19.7 19.7 13.4 13.4 19.7 7.1z"/></svg>
+          </span>
+          <span class="fw-semibold text-danger" style="font-size:1rem;">
+            {{ $standard->students_count - $standard->present_students_count }}
+          </span>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
