@@ -16,7 +16,7 @@
                     <th>Name</th>
                     <th>Chip ID</th>
                     <th>Date Added</th>
-                    <th>Date Updated</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,9 @@
                         </td>
                         <td>{{ $device->chip_id }}</td>
                         <td>{{ $device->created_at }}</td>
-                        <td>{{ $device->updated_at }}</td>
+                        <td>
+                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-button-{{ $device->chip_id }}" onclick="pairDevice('{{ $device->chip_id }}')">Pair</button>
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -41,3 +43,13 @@
         </table>
     </div>
 </section>
+
+<script>
+    function pairDevice(deviceMac) {
+        window.ws.send(JSON.stringify({ type: 'message', data: `PAIR|${deviceMac}` }));
+    }
+
+    setTimeout(() => {
+        $('.device-pairing-btn').removeClass('d-none');
+    }, 3000);
+</script>

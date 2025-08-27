@@ -162,13 +162,13 @@
                     console.log('Connected to the WebSocket server');
 
                     if(window.CURRENT_ROUTE_NAME === 'dashboard') {
-                        // Example of sending a message to the server
+                        // Send ARP command
                         ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
                     }
 
                     setInterval(() => {
                         if(window.CURRENT_ROUTE_NAME === 'dashboard') {
-                            // Example of sending a message to the server
+                            // Send ARP command
                             ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
                         }
                     }, 300000); // 300000 milliseconds = 5 minutes
@@ -180,6 +180,12 @@
                             ws.send(pingMessage);
                         }
                     }, pingInterval);
+
+                    // Send PAIR Command
+                    if(window.CURRENT_ROUTE_NAME === 'school-settings.edit') {
+                        // Send GET_PEERS command
+                        ws.send(JSON.stringify({ type: 'message', data: 'GET_PEERS' }));
+                    }
                 };
 
                 ws.onclose = () => {
@@ -256,6 +262,15 @@
                             }
                             return;
                         }
+                    }
+
+                    if(message.type === 'peers') {
+                        const peers = message.value.split(',');
+
+                        peers.forEach(peer => {
+                            // remove pair button from DOM
+                            document.getElementById(`pair-button-${peer}`).remove();
+                        });
                     }
                 }
 
