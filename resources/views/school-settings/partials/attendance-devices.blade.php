@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Attendance Devices') }}
+            {{ __('Attendance Terminals') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your Attendance devices.") }}
+            {{ __("Update your Attendance terminals.") }}
         </p>
     </header>
 
@@ -28,14 +28,15 @@
                         </td>
                         <td>{{ $device->chip_id }}</td>
                         <td>{{ $device->created_at }}</td>
-                        <td>
-                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-button-{{ $device->chip_id }}" onclick="pairDevice('{{ $device->chip_id }}')">Pair</button>
+                        <td style="min-width:70px;">
+                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-device-button-{{ $device->chip_id }}" onclick="pairDevice('{{ $device->chip_id }}')">Pair</button>
+                            <button class="btn btn-dark device-find-btn d-none" id="find-device-button-{{ $device->chip_id }}" onclick="findDevice('{{ $device->chip_id }}')">Find</button>
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="2" class="text-center text-gray-500 py-4">
-                            {{ __("No attendance devices found.") }}
+                            {{ __("No attendance terminals found.") }}
                         </td>
                     </tr>
                 @endforelse
@@ -43,13 +44,3 @@
         </table>
     </div>
 </section>
-
-<script>
-    function pairDevice(deviceMac) {
-        window.ws.send(JSON.stringify({ type: 'message', data: `PAIR|${deviceMac}` }));
-    }
-
-    setTimeout(() => {
-        $('.device-pairing-btn').removeClass('d-none');
-    }, 3000);
-</script>

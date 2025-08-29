@@ -17,7 +17,6 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -147,7 +146,6 @@
         @endphp
         @if($device)
             <script>
-                
                 window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
                 if(window.CURRENT_ROUTE_NAME === 'dashboard') {
                     fetchStandardAttendanceCards();
@@ -269,9 +267,34 @@
 
                         peers.forEach(peer => {
                             // remove pair button from DOM
-                            document.getElementById(`pair-button-${peer}`).remove();
+                            const pairButton = document.getElementById(`pair-device-button-${peer}`);  
+                            if (pairButton) {
+                                pairButton.remove();
+                            }
+
+                            const findButton = document.getElementById(`find-device-button-${peer}`);
+                            if (findButton) {
+                                findButton.classList.remove('d-none');
+                            }
+                        });
+
+                        $('.device-pairing-btn').removeClass('d-none').each(function () {
+                            $(this).closest('tr').addClass('table-danger');
+                        });
+                        
+                        $('.device-pairing-btn').one('click', function () {
+                            this.disabled = true;
+                            this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
                         });
                     }
+                }
+                
+                function pairDevice(deviceMac) {
+                    window.ws.send(JSON.stringify({ type: 'message', data: `PAIR|${deviceMac}` }));
+                }
+
+                function findDevice(deviceMac) {
+                    window.ws.send(JSON.stringify({ type: 'message', data: `FMT|${deviceMac}` }));
                 }
 
                 function syncAttendanceWithDevice() {
