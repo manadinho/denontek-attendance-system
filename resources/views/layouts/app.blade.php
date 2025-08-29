@@ -152,7 +152,7 @@
                 }
                 
                 window.ATTENDANCE = [];
-                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->chip_id)}}');
+                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->mac_address)}}');
                 const pingInterval = 25000;
                 let pingIntervalId;
 

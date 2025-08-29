@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Chip ID</th>
+                    <th>MAC Address</th>
                     <th>Date Added</th>
                     <th></th>
                 </tr>
@@ -26,11 +26,11 @@
                             <input type="text" style="background: transparent; border-radius:9px;width: 90%" value="{{ $device->name ? $device->name:"Registeration".$loop->iteration }}" onchange="updateDeviceName('{{$device->id}}', this)">
                             <svg style="display:none;width:30px;height:30px;margin-left:-33px;margin-bottom:14px" id="device-checkmark-{{$device->id}}" class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
                         </td>
-                        <td>{{ $device->chip_id }}</td>
+                        <td>{{ $device->mac_address }}</td>
                         <td>{{ $device->created_at }}</td>
                         <td style="min-width:70px;">
-                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-device-button-{{ $device->chip_id }}" onclick="pairDevice('{{ $device->chip_id }}')">Pair</button>
-                            <button class="btn btn-dark device-find-btn d-none" id="find-device-button-{{ $device->chip_id }}" onclick="findDevice('{{ $device->chip_id }}')">Find</button>
+                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-device-button-{{ $device->mac_address }}" onclick="pairDevice('{{ $device->mac_address }}')">Pair</button>
+                            <button class="btn btn-dark device-find-btn d-none" id="find-device-button-{{ $device->mac_address }}" onclick="findDevice('{{ $device->mac_address }}')">Find</button>
                         </td>
                     </tr>
                 @empty

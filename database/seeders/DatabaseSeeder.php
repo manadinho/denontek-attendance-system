@@ -63,29 +63,25 @@ class DatabaseSeeder extends Seeder
             // Create Devices
             $deviceData = [[
                 'school_id'  => $shool->id,
-                'mac_address' => '3859534809',
-                'chip_id' => '3859534809',
+                'mac_address' => '3C:61:05:11:DD:18',
                 'type'       => 'push_to_server',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'mac_address' => 'eeeeeeeeeeeee',
-                'chip_id' => '3861788420',
                 'type'       => 'receiver',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'mac_address' => 'wwwwwwwwwww',
-                'chip_id' => '1665368377',
                 'type'       => 'attendance',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
-                'mac_address' => 'dddddddddddd',
-                'chip_id' => '1637954209',
+                'mac_address' => '84:CC:A8:5E:53:5C',
                 'type'       => 'registeration',
                 'created_at' => now(),
             ]];
