@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('guardian_name');
             $table->string('guardian_contact');
+            $table->boolean('is_on_whatsapp')->default(false);
             $table->string('guardian_relation');
             $table->timestamps();
         });

@@ -26,6 +26,7 @@ class StaffController extends Controller
         $rules = [
             'name' => 'required',
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($id)],
+            'contact' => 'required',
             'type' => 'required|in:teacher,employee',
             'rfid' => 'required'
         ];
@@ -57,6 +58,7 @@ class StaffController extends Controller
 
         $staffMember->name = $validatedData['name'];
         $staffMember->email = $validatedData['email'];
+        $staffMember->contact = $validatedData['contact'];
         $staffMember->type = $validatedData['type'];
         $staffMember->rfid = $validatedData['rfid'];
 

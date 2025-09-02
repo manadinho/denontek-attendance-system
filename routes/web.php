@@ -115,9 +115,9 @@ Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
 // Device Routes
-Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
-Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
-Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
+// Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
+// Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
+// Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
 
 require __DIR__.'/auth.php';
 

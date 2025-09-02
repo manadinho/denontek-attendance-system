@@ -1,3 +1,10 @@
+<style>
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type=number] { -moz-appearance: textfield; }
+</style>
 <section class="space-y-6">
 
     <x-dark-button
@@ -36,7 +43,7 @@
 
                 <div class="form-group mt-2">
                     <label for="guardian_contact">Guardian Contact</label>
-                    <input type="text" name="guardian_contact" id="guardian_contact" class="form-control rounded" required>
+                    <input type="number" name="guardian_contact" id="guardian_contact" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">

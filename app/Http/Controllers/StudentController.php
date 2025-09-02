@@ -36,7 +36,12 @@ class StudentController extends Controller
             'guardian_relation' => 'required',
             'rfid' => 'required'
         ]);
-
+        if (!empty($validatedData['guardian_contact'])) {
+            $validatedData['guardian_contact'] = str_replace([' ', '+', '-', 'e'], '', $validatedData['guardian_contact']);
+            if (str_starts_with($validatedData['guardian_contact'], '03')) {
+                $validatedData['guardian_contact'] = '92' . substr($validatedData['guardian_contact'], 1);
+            }
+        }        
         // check if rfid is unique for current school
         $rfidExists = Student::where([['rfid', '=', $validatedData['rfid']], ['school_id', '=', session('school_id')]])->first();
         if($rfidExists && $id != $rfidExists->id) {

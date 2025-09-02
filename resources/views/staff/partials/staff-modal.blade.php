@@ -33,6 +33,11 @@
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="contact">Contact</label>
+                    <input type="tel" name="contact" id="contact" class="form-control rounded" required>
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="password">Password</label>
                     <input type="text" name="password" id="password" class="form-control rounded">
                 </div>
