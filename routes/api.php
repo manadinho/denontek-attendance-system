@@ -15,3 +15,4 @@ use App\Http\Controllers\API\PublicController;
 */
 
 Route::get('update-is-on-whatsapp/{contact}/{status}', [PublicController::class, 'updateIsOnWhatsapp'])->name('students-update-is-on-whatsapp');
+Route::get('update-redis-cache', [PublicController::class, 'updateRedisCache'])->name('update-redis-cache');

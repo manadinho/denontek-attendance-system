@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Standard;
 use App\Models\User;
 use App\Models\Device;
+use App\Services\RedisService;
 
 class StudentController extends Controller
 {
@@ -69,6 +70,8 @@ class StudentController extends Controller
         $student->school_id = session('school_id');
 
         $student->save();
+
+        app(RedisService::class)->upsertStudent($student);
 
         $message = $id ? 'Student updated successfully' : 'Student created successfully';
         return redirect()->route('students.index')->with('success', $message);

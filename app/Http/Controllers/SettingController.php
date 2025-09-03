@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SchoolSetting;
 use App\Models\Device;
+use App\Services\RedisService;
 
 class SettingController extends Controller
 {
@@ -39,6 +40,7 @@ class SettingController extends Controller
 
         $school_id = session('school_id');
         SchoolSetting::where('school_id', $school_id)->update(['checkin_start' => $request->checkin_start, 'checkin_end' => $request->checkin_end, 'checkout_start' => $request->checkout_start, 'checkout_end' => $request->checkout_end, 'week_off_days' => $weekOffDays]);
+        app(RedisService::class)->upsertSchool($school_id);
         return redirect()->route('school-settings.edit')->with('success', 'School settings updated successfully');
     }
 

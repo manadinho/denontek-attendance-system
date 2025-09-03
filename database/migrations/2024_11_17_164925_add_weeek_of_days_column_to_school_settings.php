@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('school_settings', function (Blueprint $table) {
-            $table->string('week_of_days')->default('SATURDAY,SUNDAY');
+            $table->string('week_off_days')->default('SATURDAY,SUNDAY');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('school_settings', function (Blueprint $table) {
-            $table->dropColumn('week_of_days');
+            $table->dropColumn('week_off_days');
         });
     }
 };
