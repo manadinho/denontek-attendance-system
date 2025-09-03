@@ -62,7 +62,7 @@
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="5">No Timetable Found</td>
+                            <td colspan="5" class="text-center">No Timetable Found</td>
                         </tr>
                     @endforelse
                 </tbody>

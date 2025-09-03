@@ -21,7 +21,7 @@
 
                 <div class="form-group mt-2">
                     <label for="name">Teachers</label>
-                    <select name="teachers[]" id="teachers-select" multiple="multiple">
+                    <select name="teachers[]" id="teachers-select" multiple="multiple" required>
                         @foreach($teachers as $teacher)
                             <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                         @endforeach

@@ -33,7 +33,7 @@
                                 <option value="{{ $shift->id }}">{{ $shift->name }}</option>
                             @endif
                         @empty
-                            <option value="">No Shift Found</option>
+                            <option value="" class="text-center">No Shift Found</option>
                         @endforelse
                     </select>
                 </div>

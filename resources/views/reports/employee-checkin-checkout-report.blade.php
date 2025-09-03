@@ -47,7 +47,7 @@ thead th:first-child {
                 <div class="form-group col-md-2">
                     <!-- Nothing to show -->
                 </div>
-                <div class="form-group col-md-6 mt-2">
+                <div class="form-group col-md-6 mt-2 pt-2">
                     <x-primary-button id="submit-btn">
                         {{ __('Generate Report') }}
                     </x-primary-button>

@@ -25,6 +25,8 @@
         <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
         <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         {{-- <script src="https://js.pusher.com/3.0/pusher.min.js"></script> --}}
 
         <!-- Scripts -->
@@ -144,6 +146,18 @@
         @php
             $device = \App\Models\Device::where('school_id', session('school_id'))->where('type', 'push_to_server')->first();
         @endphp
+        @if(session('success'))
+            <script>
+                const message = "{{ session('success') }}";
+                Toastify({
+                    text: message,
+                    className: "success-animation",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
+            </script>
+        @endif
         @if($device)
             <script>
                 window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
@@ -225,9 +239,10 @@
 
                     if(message.type === 'status') {
                         const mac = message.value.replace(/:/g, '-');
+                        console.log('====', `device-chip-${mac}-offline`)
                         
-                        $(`#device-chip-${mac} .circle-online`).removeClass('hidden');
-                        $(`#device-chip-${mac} .circle-offline`).addClass('hidden');
+                        $(`#device-chip-${mac}-online`).css("display", "block");
+                        $(`#device-chip-${mac}-offline`).css("display", "none");
                     }
 
                     if(message.type === 'onGetAttendance') {
@@ -431,12 +446,6 @@
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                    </div>
-                @endif
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
                 @if(session('error'))

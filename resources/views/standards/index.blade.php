@@ -33,13 +33,13 @@
                             <td>{{$standard->students_count}}</td>
                             <td>{{ $standard->created_at->format('Y-m-d') }}</td>
                             <td>
-                                <a href="javascript:void(0)" onclick="editStandard({{$standard}})"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="pr-2" onclick="editStandard({{$standard}})"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" onclick="deleteStandard('{{route('standards.destroy', $standard->id)}}')"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">No Standards Found</td>
+                            <td colspan="5" class="text-center">No Standards Found</td>
                         </tr>
                     @endforelse
                 </tbody>

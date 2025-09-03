@@ -10,7 +10,7 @@
             @forelse($schools as $school)
                 @include('partials.school-card', ['school' => $school])
             @empty
-                <p>No Schools Found</p>
+                <p class="text-center">No Schools Found</p>
             @endforelse
         </div>
     </div>
