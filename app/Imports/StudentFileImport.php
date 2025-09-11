@@ -71,6 +71,7 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_contact' => ['index' => 2, 'title' => 'guardian_contact', 'rules' => 'required'],
             'guardian_relation' => ['index' => 3, 'title' => 'guardian_relation', 'rules' => 'required'],
             'standard' => ['index' => 4, 'title' => 'standard', 'rules' => 'required'],
+            'rfid' => ['index' => 5, 'title' => 'rfid', 'rules' => 'required|unique:students,rfid']
         ];
     }
 
@@ -154,6 +155,7 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_contact' => $row[2] ?? null,
             'guardian_relation' => $row[3] ?? "",
             'standard' => $row[4] ?? null,
+            'rfid' => $row[5] ?? null,
         ];
 
         $filteredData = array_filter($data, function ($value) {
@@ -186,10 +188,10 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_name' => $importData['guardian_name'],
             'guardian_contact' => $importData['guardian_contact'],
             'guardian_relation' => $importData['guardian_relation'],
-            'rfid' => ' ',
+            'rfid' => $importData['rfid'],
         ]);
         } catch (\Throwable $th) {
-            
+                     
         }
     }
 }

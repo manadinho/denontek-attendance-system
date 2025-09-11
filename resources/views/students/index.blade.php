@@ -36,6 +36,7 @@
                         <th width="18%">Guardian Name</th>
                         <th width="18%">Guardian Relation</th>
                         <th width="18%">Guardian Contact</th>
+                        <th width="18%">Messaging</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -47,6 +48,13 @@
                             <td>{{ $student->guardian_name }}</td>
                             <td>{{ $student->guardian_relation }}</td>
                             <td>{{ $student->guardian_contact }}</td>
+                            <td>
+                                @if($student->is_on_whatsapp)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 191.667 191.667" width="1em" height="1em" fill="green" style="vertical-align:middle;"><path d="M95.833,0C42.991,0,0,42.99,0,95.833s42.991,95.834,95.833,95.834s95.833-42.991,95.833-95.834S148.676,0,95.833,0z M150.862,79.646l-60.207,60.207c-2.56,2.56-5.963,3.969-9.583,3.969c-3.62,0-7.023-1.409-9.583-3.969l-30.685-30.685c-2.56-2.56-3.97-5.963-3.97-9.583c0-3.621,1.41-7.024,3.97-9.584c2.559-2.56,5.962-3.97,9.583-3.97c3.62,0,7.024,1.41,9.583,3.971l21.101,21.1l50.623-50.623c2.56-2.56,5.963-3.969,9.583-3.969c3.62,0,7.023,1.409,9.583,3.969C156.146,65.765,156.146,74.362,150.862,79.646z"/></svg>
+                                @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="1em" height="1em" fill="red" style="vertical-align:middle;"><path d="M96 0C43 0 0 43 0 96s43 96 96 96 96-43 96-96S149 0 96 0zm39.3 123.3c2.8 2.8 2.8 7.3 0 10.1-1.4 1.4-3.2 2.1-5.1 2.1s-3.7-.7-5.1-2.1L96 106.1l-29.1 29.3c-1.4 1.4-3.2 2.1-5.1 2.1s-3.7-.7-5.1-2.1c-2.8-2.8-2.8-7.3 0-10.1L85.9 96 56.7 66.7c-2.8-2.8-2.8-7.3 0-10.1 2.8-2.8 7.3-2.8 10.1 0L96 85.9l29.1-29.3c2.8-2.8 7.3-2.8 10.1 0 2.8 2.8 2.8 7.3 0 10.1L106.1 96l29.2 29.3z"/></svg>
+                                @endif
+                             </td>
                             <td>
                                 <a href="javascript:void(0)" class="pr-2" onclick="editStudent({{$student}})"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" onclick="deleteStudent('{{route('students.destroy', $student->id)}}')"><i class="fas fa-trash"></i></a>

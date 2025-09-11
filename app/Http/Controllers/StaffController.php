@@ -13,7 +13,7 @@ class StaffController extends Controller
     public function index()
     {
         $school_id = session('school_id');
-        $staff = User::where([['school_id', '=', $school_id], ['type', '!=', 'admin']])->paginate(15);
+        $staff = User::where([['school_id', '=', $school_id]])->whereIn('type', ['teacher', 'employee'])->paginate(15);
         $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
         
         return view('staff.index', ['staffMembers' => $staff, 'registrationDevices' => $registrationDevices]);

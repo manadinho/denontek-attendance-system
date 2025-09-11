@@ -119,6 +119,7 @@ class RedisService
             'id'               => $s->id,
             'name'             => $s->name,
             'guardian_contact' => $s->guardian_contact,
+            'guardian_name'    => $s->guardian_name,
         ], JSON_UNESCAPED_UNICODE));
     }
 

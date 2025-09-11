@@ -1,8 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Import') }}
-        </h2>
+		<div class="row">
+			<h2 class="col-md-9 font-semibold text-xl text-gray-800 leading-tight">
+				{{ __('Import') }}
+			</h2>
+			<div class="col-md-3">
+				<select name="download-sample" class="form-control" onchange="downloadFile(this)">
+					<option value="">Download Sample File</option>
+					<option value="{{asset('assets/sample-import-files/student.xlsx')}}">Students</option>
+					<option value="{{asset('assets/sample-import-files/staff.xlsx')}}">Staff</option>
+				</select>
+			</div>
+		</div>
     </x-slot>
 
     <div class="mt-3">
@@ -78,3 +87,12 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+	function downloadFile(select) {
+		if (select.value) {
+			window.location.href = select.value;
+			select.value = ""; // reset dropdown
+		}
+	}
+</script>
