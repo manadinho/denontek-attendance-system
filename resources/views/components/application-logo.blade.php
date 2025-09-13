@@ -1,1 +1,1 @@
-<img style="width: 170px;margin-top:0.4rem" src="https://denontek.com.pk/image/catalog/new_logo_2.jpg" alt="Denontek Logo">
+<img style="width: 170px;margin-top:0.4rem" src="{{asset('assets/img/den-logo.jpg')}}" alt="Denontek Logo">

@@ -7,7 +7,7 @@
         <meta name="current-route" content="{{ Route::currentRouteName() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-        <link rel="icon" type="image/x-icon" href="https://denontek.com.pk/image/catalog/Logo/icon.png">
+        <link rel="icon" type="image/x-icon" href="{{asset('assets/img/den-icon.png')}}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

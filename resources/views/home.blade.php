@@ -9,7 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-        <link rel="icon" type="image/x-icon" href="https://denontek.com.pk/image/catalog/Logo/icon.png">
+        <link rel="icon" type="image/x-icon" href="{{asset('assets/img/den-icon.png')}}">
 
         <style>
             .max-w-7xl{max-width:80rem}
@@ -52,7 +52,7 @@
 
             <div class="max-w-7xl mx-auto p-6" style="margin-top: 25vh">
                 <div class="flex justify-center">
-                    <img src="https://denontek.com.pk/image/catalog/new_logo_2.jpg" alt="Denontek Logo">
+                    <img src="{{asset('assets/img/den-logo.jpg')}}" alt="Denontek Logo">
                 </div>
 
                 <div class="mt-16">

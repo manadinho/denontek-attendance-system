@@ -150,7 +150,16 @@
 
             function StandardFilterChanged(element) {
                 let url = new URL(window.location.href);
+
+                // update standard filter param
                 url.searchParams.set('standard', $(element).val());
+
+                // if page param exists, reset it to 1
+                if (url.searchParams.has('page')) {
+                    url.searchParams.set('page', 1);
+                }
+
+                // update URL + reload
                 window.history.pushState({ path: url.href }, '', url.href);
                 window.location.href = url;
             }
