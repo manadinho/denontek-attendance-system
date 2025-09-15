@@ -80,14 +80,14 @@ class DatabaseSeeder extends Seeder
             [
                 'school_id'  => $shool->id,
                 'name'       => 'Attendance Device 1',
-                'mac_address' => 'wwwwwwwwwww',
+                'mac_address' => 'C4:D8:D5:03:8E:33',
                 'type'       => 'attendance',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
                 'name'       => 'Registration Device 1',
-                'mac_address' => '84:CC:A8:5E:53:5C',
+                'mac_address' => 'C4:D8:D5:03:75:14',
                 'type'       => 'registeration',
                 'created_at' => now(),
             ]];

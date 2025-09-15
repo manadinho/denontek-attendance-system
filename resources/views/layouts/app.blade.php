@@ -291,6 +291,11 @@
                             if (findButton) {
                                 findButton.classList.remove('d-none');
                             }
+
+                            const forgetButton = document.getElementById(`forget-device-button-${peer}`);
+                            if (forgetButton) {
+                                forgetButton.classList.remove('d-none');
+                            }
                         });
 
                         $('.device-pairing-btn').removeClass('d-none').each(function () {
@@ -310,6 +315,16 @@
 
                 function findDevice(deviceMac) {
                     window.ws.send(JSON.stringify({ type: 'message', data: `FMT|${deviceMac}` }));
+                }
+
+                function forgetDevice(deviceMac) {
+                    window.ws.send(JSON.stringify({ type: 'message', data: `UMT|${deviceMac}` }));
+                }
+
+                function refreshHub() {
+                    if(confirm("Are you sure you want to refresh the hub? Make sure you have removed all Terminals.")) {
+                        window.ws.send(JSON.stringify({ type: 'message', data: `UMH` }));
+                    }
                 }
 
                 function syncAttendanceWithDevice() {

@@ -92,6 +92,11 @@
     <div class="flex items-center gap-4 pt-2">
         <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
     </div>
+    @if(userType() == 'superadmin')
+        <div class="flex items-center gap-4 pt-2">
+            <x-danger-button onclick="refreshHub()">{{ __('Refresh Hub') }}</x-danger-button>
+        </div>
+    @endif
     <script>
         const weekOffDays = @json($weekOffDays);
         console.log(weekOffDays);
