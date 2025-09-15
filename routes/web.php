@@ -14,6 +14,7 @@ use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\StudentReportsController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\ImportController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -118,6 +119,11 @@ Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallb
 // Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
 // Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
 // Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
+
+Route::get('/sdfsdfpoi09678/uitec2q/refresh-db', function(){
+    Artisan::call('migrate:fresh');
+    Artisan::call('db:seed');
+});
 
 require __DIR__.'/auth.php';
 
