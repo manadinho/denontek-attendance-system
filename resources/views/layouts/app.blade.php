@@ -327,6 +327,12 @@
                     }
                 }
 
+                function resetCredsHub() {
+                    if(confirm("Are you sure you want to reset the hub credentials?")) {
+                        window.ws.send(JSON.stringify({ type: 'message', data: `RCH` }));
+                    }
+                }
+
                 function syncAttendanceWithDevice() {
                     const element = document.getElementById('sync-attendance');
                     

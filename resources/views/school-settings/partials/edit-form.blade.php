@@ -94,7 +94,10 @@
     </div>
     @if(userType() == 'superadmin')
         <div class="flex items-center gap-4 pt-2">
-            <x-danger-button onclick="refreshHub()">{{ __('Refresh Hub') }}</x-danger-button>
+            <x-danger-button onclick="refreshHub()">{{ __('Refresh Hub') }} <small>(Receiver)</small></x-danger-button>
+        </div>
+        <div class="flex items-center gap-4 pt-2">
+            <x-danger-button onclick="resetCredsHub()">{{ __('Switch Hub to AP Mode') }}</x-danger-button>
         </div>
     @endif
     <script>
