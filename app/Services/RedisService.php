@@ -111,7 +111,7 @@ class RedisService
     {
         // remove if off WhatsApp or RFID missing
         if (!$s->is_on_whatsapp || !$s->rfid) {
-            Redis::hdel(self::STUDENTS_KEY, $s->rfid);
+            self::callWhatsappServerEndpointToDeleteFromRedis(self::STUDENTS_KEY, $s->rfid);
             return;
         }
 
@@ -174,5 +174,18 @@ class RedisService
             info('Failed to call WhatsApp server endpoint to update Redis cache');
         }
         info('Called WhatsApp server endpoint to update Redis cache');
+    }
+
+    private static function callWhatsappServerEndpointToDeleteFromRedis($hash, $key)
+    {
+        $response = \Http::post(env('WHATSAPP_URL') . '/redis/hdel', [
+            'hash' => $hash,
+            'key'  => $key,
+        ]);
+
+        if( $response->failed() ) {
+            info('Failed to call WhatsApp server endpoint to delete from Redis cache');
+        }
+        info('Called WhatsApp server endpoint to delete from Redis cache');
     }
 }
