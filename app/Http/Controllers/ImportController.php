@@ -44,6 +44,7 @@ class ImportController extends Controller
                 $studentFileImport = $request->type == 'student' ? new StudentFileImport($fileUpload) : new StaffFileImport($fileUpload);
                 $studentFileImport->import('fileUploads/' . $fileUpload->file_name);   
             } catch (\Throwable $th) {
+                dd($th);
                 $fileUpload->update(['status' => 'failed']);
             }
         });
