@@ -295,6 +295,8 @@
                             const forgetButton = document.getElementById(`forget-device-button-${peer}`);
                             if (forgetButton) {
                                 forgetButton.classList.remove('d-none');
+                                const row = forgetButton.closest('tr');
+                                if (row) row.classList.remove('table-danger');
                             }
                         });
 
