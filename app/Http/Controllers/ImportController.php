@@ -42,9 +42,9 @@ class ImportController extends Controller
         DB::transaction(function() use($fileUpload, $request){
             try {
                 $studentFileImport = $request->type == 'student' ? new StudentFileImport($fileUpload) : new StaffFileImport($fileUpload);
-                $studentFileImport->import('public/fileUploads/' . $fileUpload->file_name);   
+                $filePath = env('APP_ENV') == 'production' ? 'public/fileUploads/' . $fileUpload->file_name : 'fileUploads/' . $fileUpload->file_name ;
+                $studentFileImport->import($filePath);   
             } catch (\Throwable $th) {
-                dd($th);
                 $fileUpload->update(['status' => 'failed']);
             }
         });
