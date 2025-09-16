@@ -115,7 +115,7 @@ class RedisService
             return;
         }
 
-        Redis::hset(self::STUDENTS_KEY, $s->rfid, json_encode([
+        self::callWhatsappServerEndpointToUpdateRedis(self::STUDENTS_KEY, $s->rfid, json_encode([
             'id'               => $s->id,
             'name'             => $s->name,
             'guardian_contact' => $s->guardian_contact,
@@ -154,11 +154,25 @@ class RedisService
             'checkout_end'   => $row->checkout_end,
         ];
 
-        Redis::hset(self::SCHOOLS_KEY, implode('-', explode(':', $row->mac_address)), json_encode($payload, JSON_UNESCAPED_UNICODE));
+        self::callWhatsappServerEndpointToUpdateRedis(self::SCHOOLS_KEY, implode('-', explode(':', $row->mac_address)), json_encode($payload, JSON_UNESCAPED_UNICODE));
     }
 
     public static function removeSchoolByMac(string $mac): void
     {
         Redis::hdel(self::SCHOOLS_KEY, $mac);
+    }
+
+    private static function callWhatsappServerEndpointToUpdateRedis($hash, $key, $value)
+    {
+        $response = \Http::post(env('WHATSAPP_URL') . '/redis/set', [
+            'hash'  => $hash,
+            'key'   => $key,
+            'value' => $value,
+        ]);
+
+        if( $response->failed() ) {
+            info('Failed to call WhatsApp server endpoint to update Redis cache');
+        }
+        info('Called WhatsApp server endpoint to update Redis cache');
     }
 }
