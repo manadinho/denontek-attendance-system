@@ -7,22 +7,34 @@
 
     <div class="mt-3">
         <div class="row">
-            <div class="col-9">
-                <div class="text-start">
-                    <div class="form-group">
-                        <label for=""><b>Standard:</b></label>
-                        <select name="" id="" onchange="StandardFilterChanged(this)" class="d-inline w-35 w-sm-100 form-control rounded">
-                            <option value="">Select Standard</option>
-                            @forelse($standards as $standard)
-                                <option value="{{$standard->id}}" {{(request('standard') == $standard->id ? 'selected':'' )}}>{{$standard->name}}</option>
-                            @empty
-                            @endforelse
-                        </select>
-                    </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for=""><b>Standard:</b></label><br>
+                    <select name="" id="standard-filter" class="form-control rounded">
+                        <option value="">Select Standard</option>
+                        @forelse($standards as $standard)
+                            <option value="{{$standard->id}}" {{(request('standard') == $standard->id ? 'selected':'' )}}>{{$standard->name}}</option>
+                        @empty
+                        @endforelse
+                    </select>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="text-end">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for=""><b>Name:</b></label><br>
+                    <input type="text" class="form-control" value="{{request('name')}}" id="name-filter">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for=""><b>Registeration ID:</b></label><br>
+                    <input type="text" class="form-control" value="{{request('registeration_id')}}" id="registeration-id">
+                </div>
+            </div>
+            <div class="col-12 justify-content-end d-flex">
+                <div class="d-flex align-items-center gap-2 text-end">
+                    <button class="btn btn-dark mt-4" onClick="search()"><i class="bi bi-search"></i> Search</button>
+                    <button class="btn btn-dark mt-4" onClick="resetFilter()"><i class="bi bi-arrow-clockwise"></i> Reset Filter</button>
                     @include('students.partials.student-modal')
                 </div>
             </div>
@@ -31,11 +43,13 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th width="12%">Registeration ID</th>
                         <th width="18%">Name</th>
-                        <th width="18%">Standard</th>
+                        <th width="10%">Standard</th>
                         <th width="18%">Guardian Name</th>
                         <th width="18%">Guardian Relation</th>
                         <th width="18%">Guardian Contact</th>
+                        <th width="18%">Guardian CNIC</th>
                         <th width="18%">Messaging</th>
                         <th>Actions</th>
                     </tr>
@@ -43,11 +57,13 @@
                 <tbody>
                     @forelse($students as $student)
                         <tr>
+                            <td>{{ $student->registeration_id }}</td>
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->standard->name }}</td>
                             <td>{{ $student->guardian_name }}</td>
                             <td>{{ $student->guardian_relation }}</td>
                             <td>{{ $student->guardian_contact }}</td>
+                            <td>{{ $student->guardian_cnic }}</td>
                             <td>
                                 @if($student->is_on_whatsapp)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 191.667 191.667" width="1em" height="1em" fill="green" style="vertical-align:middle;"><path d="M95.833,0C42.991,0,0,42.99,0,95.833s42.991,95.834,95.833,95.834s95.833-42.991,95.833-95.834S148.676,0,95.833,0z M150.862,79.646l-60.207,60.207c-2.56,2.56-5.963,3.969-9.583,3.969c-3.62,0-7.023-1.409-9.583-3.969l-30.685-30.685c-2.56-2.56-3.97-5.963-3.97-9.583c0-3.621,1.41-7.024,3.97-9.584c2.559-2.56,5.962-3.97,9.583-3.97c3.62,0,7.024,1.41,9.583,3.971l21.101,21.1l50.623-50.623c2.56-2.56,5.963-3.969,9.583-3.969c3.62,0,7.023,1.409,9.583,3.969C156.146,65.765,156.146,74.362,150.862,79.646z"/></svg>
@@ -62,7 +78,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No Students Found</td>
+                            <td colspan="9" class="text-center">No Students Found</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -114,22 +130,26 @@
             //     clearInterval(pingIntervalId);
             // };
             function resetStudentModalForm() {
-                $('#id').val("")
+                $('#id').val("");
+                $('#registeration_id').val("");
                 $('#name').val("");
                 $('#standard_id').val("");
                 $('#guardian_name').val("");
                 $('#guardian_contact').val("");
                 $('#guardian_relation').val("");
+                $('#guardian_cnic').val("");
                 $('#rfid').val("");
             }
 
             function editStudent(student) {
                 $('#id').val(student.id)
+                $('#registeration_id').val(student.registeration_id);
                 $('#name').val(student.name);
                 $('#standard_id').val(student.standard_id);
                 $('#guardian_name').val(student.guardian_name);
                 $('#guardian_contact').val(student.guardian_contact);
                 $('#guardian_relation').val(student.guardian_relation);
+                $('#guardian_cnic').val(student.guardian_cnic);
                 $('#rfid').val(student.rfid);
                 
                 window.dispatchEvent(new CustomEvent('open-modal', { detail: 'student-create-edit-modal' }));
@@ -148,11 +168,13 @@
                 });
             }
 
-            function StandardFilterChanged(element) {
+            function search() {
                 let url = new URL(window.location.href);
 
-                // update standard filter param
-                url.searchParams.set('standard', $(element).val());
+                // update name filter param
+                url.searchParams.set('name', $('#name-filter').val());
+                url.searchParams.set('registeration_id', $('#registeration-id').val());
+                url.searchParams.set('standard', $('#standard-filter').val());
 
                 // if page param exists, reset it to 1
                 if (url.searchParams.has('page')) {
@@ -163,6 +185,31 @@
                 window.history.pushState({ path: url.href }, '', url.href);
                 window.location.href = url;
             }
+
+            function resetFilter() {
+                let url = new URL(window.location.href);
+
+                // remove filter params
+                url.searchParams.delete('name');
+                url.searchParams.delete('registeration_id');
+                url.searchParams.delete('standard');
+
+                // if page param exists, reset it to 1
+                if (url.searchParams.has('page')) {
+                    url.searchParams.set('page', 1);
+                }
+
+                // update URL + reload
+                window.history.pushState({ path: url.href }, '', url.href);
+                window.location.href = url;
+            }
+
+            $('#standard-filter, #name-filter, #registeration-id').on('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    search();
+                }
+            });
         </script>        
     </div>
 </x-app-layout>

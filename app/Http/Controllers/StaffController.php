@@ -24,17 +24,19 @@ class StaffController extends Controller
         $id = $request->id ? $request->id : null;
 
         $rules = [
+            'staff_id' => 'required',
             'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($id)],
+            'email' => ['nullable', 'email', Rule::unique('users', 'email')->ignore($id)],
             'contact' => 'required',
             'type' => 'required|in:teacher,employee',
-            'rfid' => 'required'
+            'rfid' => 'required',
+            'cnic' => 'nullable',
         ];
     
         // If no id is provided, or if password is provided, add password validation
-        if (is_null($id) || $request->filled('password')) {
-            $rules['password'] = 'required|min:8';
-        }
+        // if (is_null($id) || $request->filled('password')) {
+        //     $rules['password'] = 'required|min:8';
+        // }
 
         $validatedData = $request->validate($rules);
 
@@ -56,10 +58,12 @@ class StaffController extends Controller
             return redirect()->route('staff.index')->with('error', 'Something went wrong!');
         }
 
+        $staffMember->staff_id = $validatedData['staff_id'];
         $staffMember->name = $validatedData['name'];
         $staffMember->email = $validatedData['email'];
         $staffMember->contact = $validatedData['contact'];
         $staffMember->type = $validatedData['type'];
+        $staffMember->cnic = $validatedData['cnic'];
         $staffMember->rfid = $validatedData['rfid'];
 
         if ($request->filled('password')) {

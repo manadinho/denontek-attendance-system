@@ -11,7 +11,7 @@ class StandardController extends Controller
     public function index()
     {
         $school_id = session('school_id');
-        $standards = Standard::withCount('students')->where('school_id', $school_id)->with('teachers', function($query) {$query->select('id', 'name');})->paginate(15);
+        $standards = Standard::withCount('students')->where('school_id', $school_id)->with('teachers', function($query) {$query->select('id', 'name');})->paginate(config('app.pagination_size'));
         $teachers = User::where([['type', '=', 'teacher'], ['school_id', '=', $school_id]])->get(['id', 'name']);
         return view('standards.index', ['standards' => $standards, 'teachers' => $teachers]);
     }

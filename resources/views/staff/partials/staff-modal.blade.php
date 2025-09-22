@@ -14,27 +14,37 @@
             </h2>
 
             <div class="mt-6 text-start">
-                <div class="form-group">
-                    <label for="name">Staff Type</label>
+                <div class="form-group mt-2">
+                    <label for="name">Staff Type <span class="text-danger">*</span></label>
                     <select name="type" id="type" class="form-control rounded" required>
                         <option value="teacher">Teacher</option>
                         <option value="employee">Employee</option>
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="name">Name</label>
+                <div class="form-group mt-2">
+                    <label for="staff_id">Staff ID <span class="text-danger">*</span></label>
+                    <input type="text" name="staff_id" id="staff_id" class="form-control rounded" required>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="text" name="name" id="name" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control rounded" required>
+                    <label for="cnic">CNIC</label>
+                    <input type="text" name="cnic" id="cnic" class="form-control rounded">
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="contact">Contact</label>
+                    <label for="contact">Contact <span class="text-danger">*</span></label>
                     <input type="tel" name="contact" id="contact" class="form-control rounded" required>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" class="form-control rounded">
                 </div>
 
                 <div class="form-group mt-2">
@@ -53,7 +63,7 @@
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="rfid">RFID</label>
+                    <label for="rfid">RFID <span class="text-danger">*</span></label>
                     <input type="text" name="rfid" id="rfid" class="form-control rounded" required>
                 </div>
             </div>

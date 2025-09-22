@@ -13,6 +13,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th width="20%">Staff ID</th>
                         <th width="20%">Name</th>
                         <th width="20%">Email</th>
                         <th width="20%">Type</th>
@@ -23,6 +24,7 @@
                 <tbody>
                     @forelse($staffMembers as $staff)
                         <tr>
+                            <td>{{ $staff->staff_id }}</td>
                             <td>{{ $staff->name }}</td>
                             <td>{{ $staff->email }}</td>
                             <td>{{ $staff->type }}</td>
@@ -34,7 +36,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">No Staff Member Found</td>
+                            <td colspan="5" class="text-center">No Staff Member Found</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -44,18 +46,24 @@
         <script>
             function resetStaffModalForm() {
                 $('#id').val("")
+                $('#staff_id').val("");
                 $('#name').val("");
+                $('#contact').val("");
                 $('#email').val("");
                 $('#type').val("teacher");
+                $('#cnic').val("");
                 $('#rfid').val("");
             }
 
             function editStaff(staff) {
                 console.log(staff);
                 $('#id').val(staff.id)
+                $('#staff_id').val(staff.staff_id);
                 $('#name').val(staff.name);
+                $('#contact').val(staff.contact);
                 $('#email').val(staff.email);
                 $('#type').val(staff.type);
+                $('#cnic').val(staff.cnic);
                 $('#rfid').val(staff.rfid);
                 
                 window.dispatchEvent(new CustomEvent('open-modal', { detail: 'staff-create-edit-modal' }));

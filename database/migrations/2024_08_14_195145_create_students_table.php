@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('school_id');
             $table->bigInteger('standard_id');
+            $table->string('registeration_id')->nullable();
             $table->string('rfid', length: 50);
             $table->string('name');
             $table->string('guardian_name');
             $table->string('guardian_contact');
+            $table->string('guardian_cnic')->nullable();
             $table->boolean('is_on_whatsapp')->default(false);
             $table->string('guardian_relation');
             $table->timestamps();

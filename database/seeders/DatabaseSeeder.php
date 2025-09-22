@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
                 'school_id' => $shool->id,
                 'name'      => 'Super Admin',
                 'email'     => 'superadmin@attendance.com',
-                'contact'   => '03007654321',
+                'contact'   => '03076929940',
                 'password' => \Hash::make('Pa$$@0987'),
                 'type'      => 'superadmin',
             ];

@@ -8,8 +8,9 @@
 <section class="space-y-6">
 
     <x-dark-button
+        class="mt-4 ms-n3"
         x-data=""
-        x-on:click.prevent="resetStudentModalForm();$dispatch('open-modal', 'student-create-edit-modal')">+Add</x-dark-button>
+        x-on:click.prevent="resetStudentModalForm();$dispatch('open-modal', 'student-create-edit-modal')"><i class="bi bi-person-plus me-2"></i> Add Student</x-dark-button>
 
     <x-modal name="student-create-edit-modal" id="student-create-edit-modal" focusable>
         <form method="post" action="{{ route('students.store') }}" class="p-6">
@@ -22,12 +23,17 @@
 
             <div class="mt-6 text-start">
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="registeration_id">Registeration ID <span class="text-danger">*</span></label>
+                    <input type="text" name="registeration_id" id="registeration_id" class="form-control rounded" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="text" name="name" id="name" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="standard_id">Standard</label>
+                    <label for="standard_id">Standard <span class="text-danger">*</span></label>
                     <select name="standard_id" id="standard_id" class="form-control rounded">
                         @forelse($standards as $standard)
                             <option value="{{$standard->id}}">{{$standard->name}}</option>
@@ -37,23 +43,28 @@
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="guardian_name">Guardian Name</label>
+                    <label for="guardian_name">Guardian Name <span class="text-danger">*</span></label>
                     <input type="text" name="guardian_name" id="guardian_name" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="guardian_contact">Guardian Contact</label>
+                    <label for="guardian_contact">Guardian Contact <span class="text-danger">*</span></label>
                     <input type="number" name="guardian_contact" id="guardian_contact" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="guardian_relation">Guardian Relation</label>
+                    <label for="guardian_relation">Guardian Relation <span class="text-danger">*</span></label>
                     <input type="text" name="guardian_relation" id="guardian_relation" class="form-control rounded" required>
                 </div>
 
                 <div class="form-group mt-2">
+                    <label for="guardian_cnic">Guardian CNIC</label>
+                    <input type="text" name="guardian_cnic" id="guardian_cnic" class="form-control rounded">
+                </div>
+
+                <div class="form-group mt-2">
                     <label for="registration-device-select">Registeration Device</label>
-                    <select id="registration-device-select" class="form-control rounded" required onchange="selectRegistrationDevice(this)">
+                    <select id="registration-device-select" class="form-control rounded" onchange="selectRegistrationDevice(this)">
                         <option value="">Select Device</option>
                         @foreach($registrationDevices as $device)
                             <option value="{{ $device->mac_address }}">{{ $device->name }}</option>
@@ -62,7 +73,7 @@
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="rfid">RFID</label>
+                    <label for="rfid">RFID <span class="text-danger">*</span></label>
                     <input type="text" name="rfid" id="rfid" class="form-control rounded" required>
                 </div>
             </div>

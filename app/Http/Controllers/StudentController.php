@@ -16,10 +16,18 @@ class StudentController extends Controller
     {
         $where = [['school_id', '=', session('school_id')]];
         $standrdFilter = request('standard');
+        $nameFilter = request('name');
+        $registerationIdFilter = request('registeration_id');
         if($standrdFilter) {
             $where[] = ['standard_id', '=', $standrdFilter];
         }
-        $students = Student::where($where)->with('standard', function($query) {$query->select('id', 'name');})->paginate(15);
+        if($nameFilter) {
+            $where[] = ['name', 'like', '%' . $nameFilter . '%'];
+        }
+        if($registerationIdFilter) {
+            $where[] = ['registeration_id', 'like', '%' . $registerationIdFilter . '%'];
+        }
+        $students = Student::where($where)->with('standard', function($query) {$query->select('id', 'name');})->paginate(config('app.pagination_size'))->withQueryString();
         $standards = Standard::where('school_id', session('school_id'))->get(['id', 'name']);
         $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
         return view('students.index', ['students' => $students, 'standards' => $standards, 'registrationDevices' => $registrationDevices]);
@@ -68,6 +76,8 @@ class StudentController extends Controller
         $student->guardian_relation = $validatedData['guardian_relation'];
         $student->rfid = $validatedData['rfid'];
         $student->school_id = session('school_id');
+        $student->registeration_id = $request->registeration_id ? $request->registeration_id : null;
+        $student->guardian_cnic = $request->guardian_cnic ? $request->guardian_cnic : null;
 
         $student->save();
 

@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('school_id');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('contact');
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->enum('type', ['teacher', 'admin', 'employee', 'superadmin'])->default('admin');
+            $table->string('staff_id')->nullable();
             $table->string('rfid', length: 50)->nullable();
+            $table->string('cnic')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

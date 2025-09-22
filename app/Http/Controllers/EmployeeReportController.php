@@ -17,7 +17,7 @@ class EmployeeReportController extends Controller
     {
         $school_id = session('school_id');
 
-        $employees = User::where('school_id', $school_id)->get();
+        $employees = User::where('school_id', $school_id)->whereNotIn('type', ['superadmin'])->get();
 
         $schoolSettings = SchoolSetting::where('school_id', $school_id)->first();
 
