@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Models\Standard;
 use App\Models\Device;
+use App\Models\SchoolSetting;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -20,10 +23,19 @@ class HomeController extends Controller
     public function standardsWithAttendnce()
     {
         $school_id = session('school_id');
+
+        $schoolSettings = SchoolSetting::where('school_id', $school_id)->first();
+
+        $buffer = (int)($schoolSettings->buffer_minutes ?? 0);
+
+        $today = Carbon::today();
+        $checkinStart = Carbon::parse($today->toDateString() . ' ' . $schoolSettings->checkin_start)->subMinutes($buffer);
+        $checkinEnd   = Carbon::parse($today->toDateString() . ' ' . $schoolSettings->checkin_end)->addMinutes($buffer);
+
         $standardQuery = Standard::withCount('students')
-                        ->withCount(['students as present_students_count' => function($query) {
-                            $query->whereHas('attendances', function($query) {
-                                $query->whereDate('timestamp', Carbon::today());
+                        ->withCount(['students as present_students_count' => function($query) use($checkinStart, $checkinEnd) {
+                            $query->whereHas('attendances', function($a) use($checkinStart, $checkinEnd) {
+                                $a->whereBetween('timestamp', [$checkinStart, $checkinEnd]);
                             });
                         }])
                         ->where('school_id', $school_id);
@@ -65,5 +77,29 @@ class HomeController extends Controller
         }
         
         return redirect()->route('dashboard');
+    }
+
+    public function removeAllSessions()
+    {
+        $this->abortIfNotSuperAdmin();
+
+        Session::invalidate();
+        Session::regenerateToken();
+
+        $dir = storage_path('framework/sessions');
+
+        foreach (File::files($dir) as $file) {
+            if ($file->getFilename() === '.gitignore') continue;
+            File::delete($file->getPathname());
+        }
+        
+        return redirect()->route('login');
+    }
+
+    private function abortIfNotSuperAdmin()
+    {
+        if(userType() != 'superadmin') {
+            abort(404);
+        }
     }
 }

@@ -14,7 +14,7 @@
           </small>
         </div>
       </div>
-      <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-2">
+      <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-2" style="margin-top: -20px;">
         <div class="d-flex align-items-center gap-1">
           <span class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.2 4.8 12 3.4 13.4 9 19 21 7 19.6 5.6z"/></svg>
@@ -32,6 +32,20 @@
           </span>
         </div>
       </div>
+    </div>
+
+    <div class="text-end">
+      <x-dark-button
+        class="text-whtie btn-sm rounded-pill w-50 me-1"
+        style="margin-top: -44px;width: 33% !important;padding: 0px;border-radius: 10px !important;"
+        x-data="{ standardId: {{ $standard->id }} }"
+        @click.prevent="
+          $dispatch('std-modal:open', { standardId });
+          $dispatch('open-modal', 'student-attendence-detail-modal');
+        "
+      >
+        <i class="bi bi-eye"></i> View Detail
+      </x-dark-button>
     </div>
   </div>
 </div>

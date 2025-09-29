@@ -145,6 +145,7 @@ class RedisService
                 'schools.id as school_id', 'schools.name',
                 'school_settings.checkin_start', 'school_settings.checkin_end',
                 'school_settings.checkout_start', 'school_settings.checkout_end',
+                'school_settings.buffer_minutes', 'school_settings.week_off_days',
                 'devices.mac_address',
             ])
             ->first();
@@ -156,6 +157,8 @@ class RedisService
             'checkin_end'    => $row->checkin_end,
             'checkout_start' => $row->checkout_start,
             'checkout_end'   => $row->checkout_end,
+            'buffer_minutes' => $row->buffer_minutes,
+            'week_off_days'  => $row->week_off_days
         ];
 
         self::callWhatsappServerEndpointToUpdateRedis(self::SCHOOLS_KEY, implode('-', explode(':', $row->mac_address)), json_encode($payload, JSON_UNESCAPED_UNICODE));

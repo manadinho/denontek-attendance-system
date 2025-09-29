@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/', [StandardController::class, 'index'])->name('index');
             Route::post('/store', [StandardController::class, 'store'])->name('store');
             Route::get('/delete/{standard_id}', [StandardController::class, 'destroy'])->name('destroy');
+            Route::get('/get-today-attendance/{attendance_id}', [StandardController::class, 'getTodayAttendance'])->name('get-today-attendance');
         });
 
         Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
@@ -121,6 +122,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/preview', [AttendanceMessageTemplateController::class,'preview'])->name('preview');
     });
+
+    Route::get('/remove-all-sessions', [HomeController::class, 'removeAllSessions'])->name('remove-all-sessions');
 });
 
 

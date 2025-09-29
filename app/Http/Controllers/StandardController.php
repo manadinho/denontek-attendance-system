@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Standard;
 use App\Models\User;
+use App\Services\StandardService;
 
 class StandardController extends Controller
 {
@@ -54,5 +55,14 @@ class StandardController extends Controller
         $standard->delete();
 
         return redirect()->back()->with('success', 'Standard deleted successfully');
+    }
+
+    public function getTodayAttendance($standardId)
+    {
+        $response = app(StandardService::class)->getStandardTodayAttendance($standardId, session('school_id'));
+
+        $attendanceHtml = view('partials.standard-attendance-list', ['attendances' => $response[0]])->render();
+
+        return response()->json(['success' => true, 'attendanceHtml' => $attendanceHtml, 'standardName' => $response[1]]);
     }
 }

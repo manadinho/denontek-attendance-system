@@ -70,6 +70,13 @@
                 <x-text-input id="checkout_end" name="checkout_end" type="time" class="mt-1 block w-full" :value="old('checkout_end', $schoolSettings->checkout_end)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('checkout_end')" />
             </div>
+            
+            <div class="col-md-6 pt-2">
+                <x-input-label for="buffer_minutes" :value="__('Buffer Minutes')" />
+                <x-text-input id="buffer_minutes" name="buffer_minutes" type="number" class="mt-1 block w-full" :value="old('buffer_minutes', $schoolSettings->buffer_minutes)" required autofocus />
+                <x-input-error class="mt-2" :messages="$errors->get('buffer_minutes')" />
+            </div>
+
             <x-input-label class="pt-2 pb-2" for="checkin_end" :value="__('Week Days')" />
             <div class="weekdays-container">
             </div>
@@ -89,17 +96,31 @@
             @endif
         </div>
     </form>
-    <div class="flex items-center gap-4 pt-2">
-        <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="flex items-center gap-4 pt-2">
+                <x-danger-button id="sync_time_with_device">{{ __('Sync Time With Device') }}</x-danger-button>
+            </div>
+        </div>
+        @if(userType() == 'superadmin')
+            <div class="col-md-3">
+                <div class="flex items-center gap-4 pt-2">
+                    <x-danger-button onclick="refreshHub()">{{ __('Refresh Hub') }} <small>(Receiver)</small></x-danger-button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="flex items-center gap-4 pt-2">
+                    <x-danger-button onclick="resetCredsHub()">{{ __('Switch Hub to AP Mode') }}</x-danger-button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="flex items-center gap-4 pt-2">
+                    <!-- <a href="{{route('remove-all-sessions')}}" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" style="">{{ __('Remove All Sessions') }}</a> -->
+                    <x-danger-button onclick="removeAllSessions()">{{ __('Remove All Sessions') }}</x-danger-button>
+                </div>
+            </div>
+        @endif
     </div>
-    @if(userType() == 'superadmin')
-        <div class="flex items-center gap-4 pt-2">
-            <x-danger-button onclick="refreshHub()">{{ __('Refresh Hub') }} <small>(Receiver)</small></x-danger-button>
-        </div>
-        <div class="flex items-center gap-4 pt-2">
-            <x-danger-button onclick="resetCredsHub()">{{ __('Switch Hub to AP Mode') }}</x-danger-button>
-        </div>
-    @endif
     <script>
         const weekOffDays = @json($weekOffDays);
         console.log(weekOffDays);
@@ -143,6 +164,14 @@
                 });
                 weekdaysContainer.appendChild(label);
             });
+        }
+
+        function removeAllSessions()
+        {
+            if(confirm("Are you sure you want to remove all sessions?"))
+            {
+                window.location.href = "{{route('remove-all-sessions')}}";
+            }
         }
     </script>
 </section>
