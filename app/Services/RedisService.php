@@ -188,6 +188,8 @@ class RedisService
             'value' => $value,
         ]);
 
+        info($response->body());
+
         if( $response->failed() ) {
             // log call failure
             info($response->failed());
