@@ -16,6 +16,7 @@ use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttendanceMessageTemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +110,17 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/import', [ImportController::class, 'import'])->name('store');
         Route::get('/import/failed/{uploadId}', [ImportController::class, 'showFailed'])->name('show-failed');
     });
+
+    Route::group(['prefix' => 'attendance-templates', 'as' => 'attendance-templates.'], function () {
+        Route::get('/', [AttendanceMessageTemplateController::class, 'index'])->name('index');
+        Route::get('/create', [AttendanceMessageTemplateController::class, 'create'])->name('create');
+        Route::post('/', [AttendanceMessageTemplateController::class, 'store'])->name('store');
+        Route::get('/{attendance_template}/edit', [AttendanceMessageTemplateController::class, 'edit'])->name('edit');
+        Route::put('/{attendance_template}', [AttendanceMessageTemplateController::class, 'update'])->name('update');
+        Route::delete('/{attendance_template}', [AttendanceMessageTemplateController::class, 'destroy'])->name('destroy');
+
+        Route::post('/preview', [AttendanceMessageTemplateController::class,'preview'])->name('preview');
+    });
 });
 
 
@@ -121,8 +133,3 @@ Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallb
 // Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
 
 require __DIR__.'/auth.php';
-
-
-/* THINGS TO ADDRESS */
-// 1. Mac Address check in DeviceController
-// 2. Channel Names on Client and Controllers

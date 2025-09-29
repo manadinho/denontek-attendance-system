@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\AttendanceMessageTemplate;
 use App\Models\Student;
 use App\Models\Device;
 use Illuminate\Support\Facades\Redis;
@@ -11,6 +12,8 @@ class RedisService
 {
     private const STUDENTS_KEY = 'students';
     private const SCHOOLS_KEY  = 'schools';
+
+    private const MESSAGE_TEMPLATES_KEY = 'attendance_message_templates';
     // tune as needed
     private const STUDENT_DB_CHUNK = 5000; // rows per DB chunk
     private const SCHOOL_DB_CHUNK  = 1000; // rows per DB chunk
@@ -120,6 +123,7 @@ class RedisService
             'name'             => $s->name,
             'guardian_contact' => $s->guardian_contact,
             'guardian_name'    => $s->guardian_name,
+            'standard_name'    => $s->standard->name,
         ], JSON_UNESCAPED_UNICODE));
     }
 
@@ -162,8 +166,22 @@ class RedisService
         Redis::hdel(self::SCHOOLS_KEY, $mac);
     }
 
+    public static function upsertMessageTemplates($s, $mac): void
+    {
+
+        self::callWhatsappServerEndpointToUpdateRedis(self::MESSAGE_TEMPLATES_KEY, implode('-', explode(':', $mac)), json_encode($s, JSON_UNESCAPED_UNICODE));
+    }
+
+    // public static function removeMessageTemplates(AttendanceMessageTemplate $s): void
+    // {
+    //     if ($s->rfid) {
+    //         Redis::hdel(self::MESSAGE_TEMPLATES_KEY, $s->rfid);
+    //     }
+    // }
+
     private static function callWhatsappServerEndpointToUpdateRedis($hash, $key, $value)
     {
+        info(env('WHATSAPP_URL') . '/redis/set');
         $response = \Http::post(env('WHATSAPP_URL') . '/redis/set', [
             'hash'  => $hash,
             'key'   => $key,
@@ -171,6 +189,8 @@ class RedisService
         ]);
 
         if( $response->failed() ) {
+            // log call failure
+            info($response->failed());
             info('Failed to call WhatsApp server endpoint to update Redis cache');
         }
         info('Called WhatsApp server endpoint to update Redis cache');

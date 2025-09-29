@@ -136,6 +136,10 @@
                             <x-dropdown-link :href="route('school-settings.edit')">
                                 {{ __('School Settings') }}
                             </x-dropdown-link>
+
+                            <x-dropdown-link :href="route('attendance-templates.index')">
+                                {{ __('Attendance Templates') }}
+                            </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
@@ -211,6 +215,10 @@
                 @If(userType() != 'teacher')
                     <x-dropdown-link :href="route('school-settings.edit')">
                         {{ __('School Settings') }}
+                    </x-dropdown-link>
+
+                    <x-dropdown-link :href="route('attendance-templates.index')">
+                        {{ __('Attendance Templates') }}
                     </x-dropdown-link>
                 @endif
 

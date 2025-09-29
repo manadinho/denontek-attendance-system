@@ -59,6 +59,11 @@ class HomeController extends Controller
         }
 
         session(['school_id' => $school_id]);
+        $hub = Device::where('school_id', user()->school_id)->where('type', 'push_to_server')->first();
+        if ($hub) {
+            session(['hub_mac' => $hub->mac]);
+        }
+        
         return redirect()->route('dashboard');
     }
 }
