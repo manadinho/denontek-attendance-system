@@ -59,7 +59,7 @@ class StandardController extends Controller
 
     public function getTodayAttendance($standardId)
     {
-        $response = app(StandardService::class)->getStandardTodayAttendance($standardId, session('school_id'));
+        $response = app(StandardService::class)->getStandardTodayAttendance(session('school_id'), $standardId);
 
         $attendanceHtml = view('partials.standard-attendance-list', ['attendances' => $response[0]])->render();
 

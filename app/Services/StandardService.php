@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class StandardService
 {
-    public function getStandardTodayAttendance($standardId, $schoolId)
+    public function getStandardTodayAttendance($schoolId, $standardId=null)
     {
         $settings = SchoolSetting::where('school_id', $schoolId)->first();
         if (!$settings) {
@@ -31,10 +31,13 @@ class StandardService
         $checkoutEnd    = Carbon::parse($today->toDateString().' '.$settings->checkout_end)->addMinutes($buffer);
 
         // Students in this standard
-        $students = Student::where([
-            'school_id'   => $schoolId,
-            'standard_id' => $standardId,
-        ])->orderBy('created_at')->get();
+        $studentsQuery = Student::where('school_id', $schoolId);
+
+        if($standardId) {
+            $studentsQuery->where('standard_id', $standardId);
+        }
+
+        $students = $studentsQuery->orderBy('created_at')->get();
 
         if ($students->isEmpty()) {
             return response()->json([
@@ -53,6 +56,8 @@ class StandardService
 
         $result = [];
 
+        $presentCount = 0;
+        $lateComersCount = 0;
         foreach ($students as $s) {
             $logs = $attendances->get($s->id, collect());
 
@@ -76,11 +81,29 @@ class StandardService
                 'guardian_contact' => $s->guardian_contact ?? null,
                 'checkin_at'   => $checkIn  ? Carbon::parse($checkIn->timestamp)->format('H:i')  : null,
                 'checkout_at'  => $checkOut ? Carbon::parse($checkOut->timestamp)->format('H:i') : null,
+                'late_comer' => !$checkIn && $logs->count(),
             ];
+
+            $presentCount = $checkIn ? $presentCount+1 : $presentCount;
+            $lateComersCount = !$checkIn && $logs->count() ? $lateComersCount+1 : $lateComersCount;
         }
 
-        $standardName = Standard::where('id', $standardId)->value('name');
+        $standardName = '';
+        if($standardId) {
+            $standardName = Standard::where('id', $standardId)->value('name');
+        }
 
-        return [$result, $standardName];
+        return [$result, $standardName, $presentCount, $lateComersCount];
+    }
+
+    public function getTotalStrength($schoolId, $standardId=null)
+    {
+        $q = Student::where('school_id', $schoolId);
+
+        if ($standardId) {
+            $q->where('standard_id', $standardId);
+        }
+
+        return $q->count();
     }
 }

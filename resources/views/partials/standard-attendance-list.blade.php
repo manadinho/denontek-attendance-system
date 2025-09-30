@@ -4,6 +4,7 @@
         // Present if there's a check-in; tweak if you prefer (e.g., check-in OR check-out)
         $present = !empty($row['checkin_at']);
         $bgClass = $present ? 'bg-success' : 'bg-danger';
+        $bgClass = $row['late_comer'] ? 'bg-warning' : $bgClass;
       @endphp
 
         <div class="col">

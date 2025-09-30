@@ -16,19 +16,30 @@
       </div>
       <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-2" style="margin-top: -20px;">
         <div class="d-flex align-items-center gap-1">
-          <span class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.2 4.8 12 3.4 13.4 9 19 21 7 19.6 5.6z"/></svg>
+          <span class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;" title="Present">
+            <!-- <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.2 4.8 12 3.4 13.4 9 19 21 7 19.6 5.6z"/></svg> -->
+            <i class="bi bi-check fs-4"></i>
           </span>
           <span class="fw-semibold text-success" style="font-size:1rem;">
-            {{ $standard->present_students_count }}
+            {{ $standard->present_students }}
           </span>
         </div>
         <div class="d-flex align-items-center gap-1">
-          <span class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 5.7 12 12 5.7 5.7 4.3 7.1 10.6 13.4 4.3 19.7 5.7 21.1 12 14.8 18.3 21.1 19.7 19.7 13.4 13.4 19.7 7.1z"/></svg>
+          <span class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;" title="Late Comers">
+            <!-- <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 5.7 12 12 5.7 5.7 4.3 7.1 10.6 13.4 4.3 19.7 5.7 21.1 12 14.8 18.3 21.1 19.7 19.7 13.4 13.4 19.7 7.1z"/></svg> -->
+            <i class="bi bi-exclamation-lg fs-5"></i>
           </span>
           <span class="fw-semibold text-danger" style="font-size:1rem;">
-            {{ $standard->students_count - $standard->present_students_count }}
+            {{ $standard->late_students }}
+          </span>
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <span class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width:24px; height:24px;" title="Absent">
+            <!-- <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 5.7 12 12 5.7 5.7 4.3 7.1 10.6 13.4 4.3 19.7 5.7 21.1 12 14.8 18.3 21.1 19.7 19.7 13.4 13.4 19.7 7.1z"/></svg> -->
+            <i class="bi bi-x fs-4"></i>
+          </span>
+          <span class="fw-semibold text-danger" style="font-size:1rem;">
+            {{ $standard->absent_students }}
           </span>
         </div>
       </div>
@@ -37,7 +48,7 @@
     <div class="text-end">
       <x-dark-button
         class="text-whtie btn-sm rounded-pill w-50 me-1"
-        style="margin-top: -44px;width: 33% !important;padding: 0px;border-radius: 10px !important;"
+        style="margin-top: -40px;width: 38% !important;padding-top: 3px !important;padding-bottom: 3px !important;padding: 0px;border-radius: 7px !important;margin-right: 19px !important;"
         x-data="{ standardId: {{ $standard->id }} }"
         @click.prevent="
           $dispatch('std-modal:open', { standardId });

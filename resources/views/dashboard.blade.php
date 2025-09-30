@@ -94,6 +94,7 @@
         </h2>
     </x-slot>
 
+    @include('partials.notice-board')
 
     <h2 class="fs-3 fw-bold mt-3 mb-3">Device Statuses</h2>
     <div class="d-flex row">
