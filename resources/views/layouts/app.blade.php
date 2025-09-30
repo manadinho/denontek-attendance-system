@@ -431,7 +431,7 @@
                         url: "{{ route('standards-with-attendance') }}",
                         type: 'GET',
                         success: function(response) {
-                            console.log("====", response.cards);
+                            console.log("====", response.cards, $('#standard-attendance-cards'));
                             $('#standard-attendance-cards').html(response.cards);
                         },
                         error: function(error) {
