@@ -169,7 +169,9 @@
             <script>
                 window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
                 if(window.CURRENT_ROUTE_NAME === 'dashboard') {
-                    fetchStandardAttendanceCards();
+                    setTimeout(() => {
+                        fetchStandardAttendanceCards();
+                    }, 1000);
                 }
                 
                 window.ATTENDANCE = [];
@@ -431,10 +433,6 @@
                         url: "{{ route('standards-with-attendance') }}",
                         type: 'GET',
                         success: function(response) {
-                            console.log("====", response.cards, $('#standard-attendance-cards'));
-                            setTimeout(() => {
-                                console.log('---', $('#standard-attendance-cards'));
-                            }, 2000);
                             $('#standard-attendance-cards').html(response.cards);
                         },
                         error: function(error) {
