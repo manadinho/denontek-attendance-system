@@ -19,7 +19,7 @@ class AdminAlertController extends Controller
         $adminPhoneNumbers = SchoolSetting::where('school_id', session('school_id'))
             ->value('admin_phone_numbers');
 
-        return view('admin-alerts.index', ['alerts' => $alerts, 'adminPhoneNumbers' => json_decode($adminPhoneNumbers, true)]);
+        return view('admin-alerts.index', ['alerts' => $alerts, 'adminPhoneNumbers' => $adminPhoneNumbers ? json_decode($adminPhoneNumbers, true) : []]);
     }
 
     public function update()
