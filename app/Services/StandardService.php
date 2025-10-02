@@ -14,11 +14,8 @@ class StandardService
     {
         $settings = SchoolSetting::where('school_id', $schoolId)->first();
         if (!$settings) {
-            return response()->json([
-                'success' => false,
-                'data' => [],
-                'message' => 'School settings not found.',
-            ]);
+            info('No school settings found for school ID: '.$schoolId);
+            return [];
         }
 
         $buffer = $settings->buffer_minutes ?? 0;
@@ -40,10 +37,7 @@ class StandardService
         $students = $studentsQuery->orderBy('created_at')->get();
 
         if ($students->isEmpty()) {
-            return response()->json([
-                'success' => true,
-                'data' => [],
-            ]);
+            return [];
         }
 
         $studentIds = $students->pluck('id');

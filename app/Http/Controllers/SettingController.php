@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SchoolSetting;
 use App\Models\Device;
 use App\Services\RedisService;
+use App\Services\SettingsService;
 
 class SettingController extends Controller
 {
@@ -35,12 +36,23 @@ class SettingController extends Controller
             'checkout_end' => 'required',
             'buffer_minutes' => 'required',
             'weekdays' => 'required|array',
+            'admin_phone_numbers' => 'nullable|string',
         ]);
+
+        $adminPhoneNumbers = null;
+        if($request->admin_phone_numbers) {
+            $validatedAdminPhoneNumbers = app(SettingsService::class)->validateAdminPhoneNumbers($request->admin_phone_numbers);
+            if(!$validatedAdminPhoneNumbers['valid']) {
+                return redirect()->back()->with('error', $validatedAdminPhoneNumbers['message'])->withInput();
+            }
+
+            $adminPhoneNumbers = $validatedAdminPhoneNumbers['phone_numbers'];
+        }
 
         $weekOffDays = implode(',', $request->weekdays);
 
         $school_id = session('school_id');
-        SchoolSetting::where('school_id', $school_id)->update(['checkin_start' => $request->checkin_start, 'checkin_end' => $request->checkin_end, 'checkout_start' => $request->checkout_start, 'checkout_end' => $request->checkout_end, 'week_off_days' => $weekOffDays, 'buffer_minutes' => $request->buffer_minutes]);
+        SchoolSetting::where('school_id', $school_id)->update(['checkin_start' => $request->checkin_start, 'checkin_end' => $request->checkin_end, 'checkout_start' => $request->checkout_start, 'checkout_end' => $request->checkout_end, 'week_off_days' => $weekOffDays, 'buffer_minutes' => $request->buffer_minutes, 'admin_phone_numbers' => $adminPhoneNumbers]);
         app(RedisService::class)->upsertSchool($school_id);
         return redirect()->route('school-settings.edit')->with('success', 'School settings updated successfully');
     }

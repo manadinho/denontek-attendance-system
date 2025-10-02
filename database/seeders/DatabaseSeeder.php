@@ -25,6 +25,17 @@ class DatabaseSeeder extends Seeder
             ];
             $shool = School::updateOrCreate(['name' => $shoolData['name']], $shoolData);
 
+            // Add school settings
+            $schoolSettingsData = [
+                'school_id'     =>  $shool->id,
+                'checkin_start' =>  '07:00',
+                'checkin_end'   =>  '09:00',
+                'checkout_start'=>  '11:00',
+                'checkout_end'  =>  '13:00',
+                'buffer_minutes' =>  '0',
+            ];
+            DB::table('school_settings')->updateOrInsert(['school_id' => $shool->id], $schoolSettingsData);
+
             // Seed the owners table
             $ownerData = [
                 'name'     => 'Owner ABC Schools',
@@ -92,6 +103,18 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
             ]];
             DB::table('devices')->insert($deviceData);
+
+            // Add default admin alerts
+            $alertData = [
+                'school_id' => $shool->id,
+                'title'      => 'Daily Attendance Summary',
+                'time'   => '11:00',
+                'admin_contacts' => json_encode([]),
+                'active'   => false,
+                'created_at' => now(),
+            ];
+
+            DB::table('admin_alerts')->insert($alertData);
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('checkout_start')->default('11:00');
             $table->time('checkout_end')->default('13:00');
             $table->string('buffer_minutes')->default('0');
+            $table->text('admin_phone_numbers')->nullable();
             $table->timestamps();
         });
     }

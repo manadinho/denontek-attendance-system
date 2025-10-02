@@ -29,7 +29,7 @@
             <!-- <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 5.7 12 12 5.7 5.7 4.3 7.1 10.6 13.4 4.3 19.7 5.7 21.1 12 14.8 18.3 21.1 19.7 19.7 13.4 13.4 19.7 7.1z"/></svg> -->
             <i class="bi bi-exclamation-lg fs-5"></i>
           </span>
-          <span class="fw-semibold text-danger" style="font-size:1rem;">
+          <span class="fw-semibold text-warning" style="font-size:1rem;">
             {{ $standard->late_students }}
           </span>
         </div>

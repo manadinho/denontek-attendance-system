@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <style>
     input[type="checkbox"] {
         display:none;
@@ -75,6 +77,12 @@
                 <x-input-label for="buffer_minutes" :value="__('Buffer Minutes')" />
                 <x-text-input id="buffer_minutes" name="buffer_minutes" type="number" class="mt-1 block w-full" :value="old('buffer_minutes', $schoolSettings->buffer_minutes)" required autofocus />
                 <x-input-error class="mt-2" :messages="$errors->get('buffer_minutes')" />
+            </div>
+
+            <div class="col-md-6 pt-2">
+                <x-input-label for="admin_phone_numbers" :value="__('Admin Contacts')" />
+                <x-text-input id="admin_phone_numbers" name="admin_phone_numbers" type="text" class="mt-1 block w-full" :value="old('admin_phone_numbers', $schoolSettings->admin_phone_numbers)" autofocus />
+                <x-input-error class="mt-2" :messages="$errors->get('admin_phone_numbers')" />
             </div>
 
             <x-input-label class="pt-2 pb-2" for="checkin_end" :value="__('Week Days')" />
@@ -173,5 +181,12 @@
                 window.location.href = "{{route('remove-all-sessions')}}";
             }
         }
+
+        const input  = document.querySelector('#admin_phone_numbers');
+        const tagify = new Tagify(input, {
+            delimiters: ", ",
+            maxTags: 10,
+            dropdown: { enabled: 0 },
+        });
     </script>
 </section>

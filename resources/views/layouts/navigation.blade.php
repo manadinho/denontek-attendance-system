@@ -140,6 +140,10 @@
                             <x-dropdown-link :href="route('attendance-templates.index')">
                                 {{ __('Attendance Templates') }}
                             </x-dropdown-link>
+
+                            <x-dropdown-link :href="route('admin-alerts.index')">
+                                {{ __('Admin Alerts') }}
+                            </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
@@ -219,6 +223,10 @@
 
                     <x-dropdown-link :href="route('attendance-templates.index')">
                         {{ __('Attendance Templates') }}
+                    </x-dropdown-link>
+
+                    <x-dropdown-link :href="route('admin-alerts.index')">
+                        {{ __('Admin Alerts') }}
                     </x-dropdown-link>
                 @endif
 

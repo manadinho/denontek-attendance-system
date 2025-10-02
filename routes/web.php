@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAlertController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaffController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\StudentReportsController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\ImportController;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceMessageTemplateController;
 
@@ -112,6 +112,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/import/failed/{uploadId}', [ImportController::class, 'showFailed'])->name('show-failed');
     });
 
+    Route::group(['prefix' => 'admin-alerts', 'as' => 'admin-alerts.'], function () {
+        Route::get('/', [AdminAlertController::class, 'index'])->name('index');
+        Route::put('/', [AdminAlertController::class, 'update'])->name('update');
+    });
+
     Route::group(['prefix' => 'attendance-templates', 'as' => 'attendance-templates.'], function () {
         Route::get('/', [AttendanceMessageTemplateController::class, 'index'])->name('index');
         Route::get('/create', [AttendanceMessageTemplateController::class, 'create'])->name('create');
@@ -129,6 +134,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
+
+Route::get('/admin-alerts/send-alerts', [AdminAlertController::class, 'sendAlerts'])->name('admin-alerts.send-alerts');
 
 // Device Routes
 // Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
