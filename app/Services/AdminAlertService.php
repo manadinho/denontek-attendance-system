@@ -39,6 +39,11 @@ class AdminAlertService
 
     public function sendDailyAttendanceAdminAlert($alert)
     {
+        // check if today is holiday for the school then return
+        if(app(SettingsService::class)->isTodayHoliday($alert->school_id)) {
+            return;
+        }
+        
         $totalStrength = app(StandardService::class)->getTotalStrength($alert->school_id);
         $result = app(StandardService::class)->getStandardTodayAttendance($alert->school_id);
         $school = School::with('schoolSetting')->where('id', $alert->school_id)->first();
