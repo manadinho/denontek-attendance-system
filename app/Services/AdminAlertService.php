@@ -45,8 +45,10 @@ class AdminAlertService
         $absent = $totalStrength - ($result[2] + $result[3]);
 
         $message = '';
+        $checkinStart = $school->schoolSetting->checkin_start ? substr($school->schoolSetting->checkin_start, 0, 5) : '';
+        $checkinEnd = $school->schoolSetting->checkin_end ? substr($school->schoolSetting->checkin_end, 0, 5) : '';
         if($result) {
-            $message = "📝 *Daily Attendance – {$school->name}*\n\nTotal Students: {$totalStrength}\nPresent: {$result[2]}\nLate: {$result[3]}\nAbsent: {$absent}\nWindow: {$school->schoolSetting->checkin_start}–{$school->schoolSetting->checkin_end}";
+            $message = "📝 *Daily Attendance – {$school->name}*\n\nTotal Strength: {$totalStrength}\nPresent: {$result[2]}\nLate: {$result[3]}\nAbsent: {$absent}\nWindow: {$checkinStart}–{$checkinEnd}";
         }
 
         if(!$message) {
