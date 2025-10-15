@@ -20,11 +20,9 @@ class SettingController extends Controller
             $schoolSettings->save();
         }
         $schoolSettings = $schoolSettings ? $schoolSettings : new SchoolSetting();
-        $devices = Device::where('school_id', $school_id)->whereIn('type', ['registeration', 'attendance'])->get();
-        $regesterationDevices = $devices->where('type', 'registeration');
-        $attendanceDevices = $devices->where('type', 'attendance');
+        $devices = Device::where('school_id', $school_id)->get();
         $weekOffDays = explode(',', $schoolSettings->week_off_days);
-        return view('school-settings.edit', ['schoolSettings' => $schoolSettings, 'regesterationDevices' => $regesterationDevices, 'attendanceDevices' => $attendanceDevices, 'weekOffDays' => $weekOffDays]);
+        return view('school-settings.edit', ['schoolSettings' => $schoolSettings, 'devices' => $devices, 'weekOffDays' => $weekOffDays]);
     }
 
     public function updateSchoolSettings(Request $request)

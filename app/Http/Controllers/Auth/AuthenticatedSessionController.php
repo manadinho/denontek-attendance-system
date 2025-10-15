@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Device;
+use App\Models\School;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,11 +36,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::guard('web')->attempt($request->only('email', 'password'))) {
             session(['school_id' => user()->school_id]);
 
-            // storing hub mac in session
-            $hub = Device::where('school_id', user()->school_id)->where('type', 'push_to_server')->first();
-            if ($hub) {
-                session(['hub_mac' => $hub->mac_address]);
-            }
+            session(['channel_id' => School::where('id', user()->school_id)->value('channel_id')]);
             $request->session()->regenerate();
 
             return redirect()->intended(RouteServiceProvider::HOME);

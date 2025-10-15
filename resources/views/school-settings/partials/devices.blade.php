@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Registeration Terminals') }}
+            {{ __('Devices') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your Registeration terminals.") }}
+            {{ __("Update your Devices.") }}
         </p>
     </header>
 
@@ -20,10 +20,10 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($regesterationDevices as $device)
+                @forelse($devices as $device)
                     <tr>
                         <td>
-                            <input type="text" style="background: transparent; border-radius:9px;width: 90%" value="{{ $device->name ? $device->name:"Registeration".$loop->iteration }}" onchange="updateDeviceName('{{$device->id}}', this)">
+                            <input type="text" style="background: transparent; border-radius:9px;width: 90%" value="{{ $device->name ? $device->name:"Attendace".$loop->iteration }}" onchange="updateDeviceName('{{$device->id}}', this)">
                             <svg style="display:none;width:30px;height:30px;margin-left:-33px;margin-bottom:14px" id="device-checkmark-{{$device->id}}" class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
                         </td>
                         <td>{{ $device->mac_address }}</td>

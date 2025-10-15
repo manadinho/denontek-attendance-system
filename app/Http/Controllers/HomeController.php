@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Models\Standard;
 use App\Models\Device;
+use App\Models\School;
 use App\Services\StandardService;
 
 class HomeController extends Controller
@@ -13,8 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         $school_id = session('school_id');
-        $devices = Device::where('school_id', $school_id)->whereIn('type', ['registeration', 'attendance'])->get();
-
+        $devices = Device::where('school_id', $school_id)->get();
         $totalStrength = app(StandardService::class)->getTotalStrength($school_id);
         $todayAttendance = app(StandardService::class)->getStandardTodayAttendance($school_id);
         $presentStudents = $todayAttendance[2] ?? 0;
@@ -70,10 +70,7 @@ class HomeController extends Controller
         }
 
         session(['school_id' => $school_id]);
-        $hub = Device::where('school_id', user()->school_id)->where('type', 'push_to_server')->first();
-        if ($hub) {
-            session(['hub_mac' => $hub->mac]);
-        }
+        session(['channel_id' => School::where('id', $school_id)->value('channel_id')]);
         
         return redirect()->route('dashboard');
     }

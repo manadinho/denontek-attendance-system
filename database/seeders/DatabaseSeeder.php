@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use App\Models\School;
 use App\Models\Owner;
 use App\Models\User;
@@ -22,8 +23,12 @@ class DatabaseSeeder extends Seeder
             $shoolData = [
                 'name'    => 'ABC Schools',
                 'address' => '123, ABC Street, XYZ City',
+                'channel_id' => Str::upper(Str::random(7)),
             ];
             $shool = School::updateOrCreate(['name' => $shoolData['name']], $shoolData);
+            $channel_id = $shool->channel_id . '-' . $shool->id;
+            $shool->channel_id = $channel_id;
+            $shool->save();
 
             // Add school settings
             $schoolSettingsData = [
@@ -74,32 +79,17 @@ class DatabaseSeeder extends Seeder
             User::updateOrCreate(['email' => $superAdminData['email']], $superAdminData);
 
             // Create Devices
-            $deviceData = [[
-                'school_id'  => $shool->id,
-                'name'       => 'Push to Server Device',
-                'mac_address' => '3C:61:05:11:DD:18',
-                'type'       => 'push_to_server',
-                'created_at' => now(),
-            ],
+            $deviceData = [
             [
                 'school_id'  => $shool->id,
-                'name'       => 'Receiver Device',
-                'mac_address' => 'eeeeeeeeeeeee',
-                'type'       => 'receiver',
-                'created_at' => now(),
-            ],
-            [
-                'school_id'  => $shool->id,
-                'name'       => 'Attendance Device 1',
+                'name'       => 'Device 1',
                 'mac_address' => 'C4:D8:D5:03:8E:33',
-                'type'       => 'attendance',
                 'created_at' => now(),
             ],
             [
                 'school_id'  => $shool->id,
-                'name'       => 'Registration Device 1',
+                'name'       => 'Device 2',
                 'mac_address' => 'C4:D8:D5:03:75:14',
-                'type'       => 'registeration',
                 'created_at' => now(),
             ]];
             DB::table('devices')->insert($deviceData);

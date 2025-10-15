@@ -9,7 +9,6 @@
             </div>                                                          <!-- close 7 -->
             <div>                                                           <!-- 8 -->
               <h5 class="card-title mb-1">{{ $device->name }}</h5>
-              <small class="text-muted text-uppercase">{{ ucfirst($device->type) }}</small>
             </div>                                                          <!-- close 8 -->
           </div>                                                            <!-- close 6 -->
           <span id="device-chip-{{str_replace(':', '-', $device->mac_address)}}-offline" class="badge status-offline px-3 py-2 text-black">

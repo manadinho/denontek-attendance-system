@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Device;
 use App\Models\User;
 use App\Models\Owner;
-use Illuminate\Http\Request;
+use App\Models\School;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
@@ -39,11 +38,7 @@ class GoogleLoginController extends Controller
         if(isUser()) {
             session(['school_id' => user()->school_id]);
 
-            // storing hub mac in session
-            $hub = Device::where('school_id', user()->school_id)->where('type', 'push_to_server')->first();
-            if ($hub) {
-                session(['hub_mac' => $hub->mac]);
-            }
+            session(['channel_id' => School::where('id', user()->school_id)->value('channel_id')]);
         }
 
         return redirect(RouteServiceProvider::HOME);

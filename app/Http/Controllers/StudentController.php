@@ -29,8 +29,8 @@ class StudentController extends Controller
         }
         $students = Student::where($where)->with('standard', function($query) {$query->select('id', 'name');})->paginate(config('app.pagination_size'))->withQueryString();
         $standards = Standard::where('school_id', session('school_id'))->get(['id', 'name']);
-        $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
-        return view('students.index', ['students' => $students, 'standards' => $standards, 'registrationDevices' => $registrationDevices]);
+        $devices = Device::where('school_id', session('school_id'))->get();
+        return view('students.index', ['students' => $students, 'standards' => $standards, 'devices' => $devices]);
     }
 
     public function store(Request $request)

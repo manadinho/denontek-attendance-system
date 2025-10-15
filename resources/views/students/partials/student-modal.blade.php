@@ -66,7 +66,7 @@
                     <label for="registration-device-select">Registeration Device</label>
                     <select id="registration-device-select" class="form-control rounded" onchange="selectRegistrationDevice(this)">
                         <option value="">Select Device</option>
-                        @foreach($registrationDevices as $device)
+                        @foreach($devices as $device)
                             <option value="{{ $device->mac_address }}">{{ $device->name }}</option>
                         @endforeach
                     </select>

@@ -150,9 +150,6 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        @php
-            $device = \App\Models\Device::where('school_id', session('school_id'))->where('type', 'push_to_server')->first();
-        @endphp
         @if(session('success'))
             <script>
                 const message = "{{ session('success') }}";
@@ -165,7 +162,7 @@
                 }).showToast();
             </script>
         @endif
-        @if($device)
+        @if(session("channel_id"))
             <script>
                 window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
                 if(window.CURRENT_ROUTE_NAME === 'dashboard') {
@@ -175,7 +172,7 @@
                 }
                 
                 window.ATTENDANCE = [];
-                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{str_replace(":", "-", $device->mac_address)}}');
+                ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{session("channel_id")}}');
                 const pingInterval = 25000;
                 let pingIntervalId;
 

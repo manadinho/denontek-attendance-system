@@ -137,6 +137,29 @@ Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallb
 
 Route::get('/admin-alerts/send-alerts', [AdminAlertController::class, 'sendAlerts'])->name('admin-alerts.send-alerts');
 
+Route::get('/get-config', function() {
+    info("got call.....");
+    return response()->json(['s_host' => '165.22.243.143', 's_port' => '3333', 'unique_id' => 'skl123321123']);
+})->name('get-config');
+
+// Route::post('/attendance-upload', function() {
+//     $uploadedFiles = request()->allFiles();
+
+//     info('Attendance Upload Hit at '.now());
+//     info('Request Data: '.json_encode(request()->getContent()));
+
+//     if (!empty($uploadedFiles)) {
+//         foreach ($uploadedFiles as $fieldName => $file) {
+//             info('File Name: '.$file->getClientOriginalName());
+//             info('File Size: '.$file->getSize());
+//             info('File Mime Type: '.$file->getMimeType());
+
+//             $path = $file->store('attendance_files');
+//             return response()->json(['status' => 'success', 'message' => 'File uploaded successfully', 'path' => $path]);
+//         }
+//     }
+// });
+
 // Device Routes
 // Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
 // Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');

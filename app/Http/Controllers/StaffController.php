@@ -14,9 +14,9 @@ class StaffController extends Controller
     {
         $school_id = session('school_id');
         $staff = User::where([['school_id', '=', $school_id]])->whereIn('type', ['teacher', 'employee'])->paginate(15);
-        $registrationDevices = Device::where('school_id', session('school_id'))->where('type', 'registeration')->get();
+        $devices = Device::where('school_id', session('school_id'))->get();
         
-        return view('staff.index', ['staffMembers' => $staff, 'registrationDevices' => $registrationDevices]);
+        return view('staff.index', ['staffMembers' => $staff, 'devices' => $devices]);
     }
 
     public function store(Request $request)
