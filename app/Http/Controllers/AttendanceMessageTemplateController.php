@@ -38,13 +38,14 @@ class AttendanceMessageTemplateController extends Controller
             AttendanceMessageTemplate::where('school_id',$data['school_id'])
                 ->where('type',$tpl->type)
                 ->where('id','!=',$tpl->id)
+                ->where('type', $tpl->type)
                 ->update(['is_active'=>false]);
         }
 
         // get all templates for this school
         // and push to redis
         $templates = AttendanceMessageTemplate::where(['school_id' => $data['school_id'], 'is_active' => true])->get();
-        app(RedisService::class)->upsertMessageTemplates($templates, session('hub_mac'));
+        app(RedisService::class)->upsertMessageTemplates($templates, session('channel_id'));
 
         return redirect()->route('attendance-templates.index')->with('ok','Template saved.');
     }
@@ -66,13 +67,14 @@ class AttendanceMessageTemplateController extends Controller
         if ($attendance_template->is_active) {
             AttendanceMessageTemplate::where('school_id',session('school_id'))
                 ->where('id','!=',$attendance_template->id)
+                ->where('type', $attendance_template->type)
                 ->update(['is_active'=>false]);
         }
 
         // get all templates for this school
         // and push to redis
         $templates = AttendanceMessageTemplate::where(['school_id' => session('school_id'), 'is_active' => true])->get();
-        app(RedisService::class)->upsertMessageTemplates($templates, session('hub_mac'));
+        app(RedisService::class)->upsertMessageTemplates($templates, session('channel_id'));
 
         return back()->with('ok','Template updated.');
     }
@@ -83,7 +85,7 @@ class AttendanceMessageTemplateController extends Controller
         // get all templates for this school
         // and push to redis
         $templates = AttendanceMessageTemplate::where(['school_id' => session('school_id'), 'is_active' => true])->get();
-        app(RedisService::class)->upsertMessageTemplates($templates, session('hub_mac'));
+        app(RedisService::class)->upsertMessageTemplates($templates, session('channel_id'));
         
         return back()->with('ok','Deleted.');
     }

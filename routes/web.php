@@ -135,30 +135,31 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
-Route::get('/admin-alerts/send-alerts', [AdminAlertController::class, 'sendAlerts'])->name('admin-alerts.send-alerts');
-
-Route::get('/get-config', function() {
-    info("got call.....");
-    return response()->json(['s_host' => '165.22.243.143', 's_port' => '3333', 'unique_id' => 'skl123321123']);
+Route::get('/get-config/{macAddress}', function($macAddress) {
+    info("got call.....$macAddress");
+    return response()->json(['s_host' => '192.168.1.14', 's_port' => '3333', 'channel_id' => 'CKH3JV5-1', 'mor_checkin' => '10:00', 'mor_checkout' => '20:00']);
 })->name('get-config');
 
-// Route::post('/attendance-upload', function() {
-//     $uploadedFiles = request()->allFiles();
+Route::post('/sync-attendance-file/{macAddress}/{fileName}', function($macAddress, $fileName) {
+    $uploadedFiles = request()->allFiles();
 
-//     info('Attendance Upload Hit at '.now());
-//     info('Request Data: '.json_encode(request()->getContent()));
+    info ("Attendance file sync hit for MAC: $macAddress, File: $fileName");
+    info('Attendance Upload Hit at '.now());
+    info('Request Data: '.json_encode(request()->getContent()));
 
-//     if (!empty($uploadedFiles)) {
-//         foreach ($uploadedFiles as $fieldName => $file) {
-//             info('File Name: '.$file->getClientOriginalName());
-//             info('File Size: '.$file->getSize());
-//             info('File Mime Type: '.$file->getMimeType());
+    return response()->json(['status' => 'success', 'missing_file' => '', 'message' => 'File uploaded successfully']);
 
-//             $path = $file->store('attendance_files');
-//             return response()->json(['status' => 'success', 'message' => 'File uploaded successfully', 'path' => $path]);
-//         }
-//     }
-// });
+    if (!empty($uploadedFiles)) {
+        foreach ($uploadedFiles as $fieldName => $file) {
+            info('File Name: '.$file->getClientOriginalName());
+            info('File Size: '.$file->getSize());
+            info('File Mime Type: '.$file->getMimeType());
+
+            $path = $file->store('attendance_files');
+            return response()->json(['status' => 'success', 'message' => 'File uploaded successfully', 'path' => $path]);
+        }
+    }
+});
 
 // Device Routes
 // Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');

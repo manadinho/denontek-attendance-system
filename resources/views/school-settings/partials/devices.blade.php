@@ -29,11 +29,7 @@
                         <td>{{ $device->mac_address }}</td>
                         <td>{{ $device->created_at }}</td>
                         <td style="min-width:70px;">
-                            <button class="btn btn-dark device-pairing-btn d-none" id="pair-device-button-{{ $device->mac_address }}" onclick="pairDevice('{{ $device->mac_address }}')">Pair</button>
-                            <button class="btn btn-dark device-find-btn d-none" id="find-device-button-{{ $device->mac_address }}" onclick="findDevice('{{ $device->mac_address }}')">Find</button>
-                            @if(userType() == 'superadmin')
-                                <button class="btn btn-dark device-forget-btn d-none" id="forget-device-button-{{ $device->mac_address }}" onclick="forgetDevice('{{ $device->mac_address }}')">Forget</button>
-                            @endif
+                            <button class="btn btn-dark device-find-btn" id="find-device-button-{{ $device->mac_address }}" onclick="findDevice('{{ $device->mac_address }}')">Find</button>
                         </td>
                     </tr>
                 @empty

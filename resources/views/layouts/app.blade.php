@@ -150,6 +150,11 @@
         </style>
     </head>
     <body class="font-sans antialiased">
+        <div id="spinnerOverlay" class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white" style="z-index: 1050; display: none; opacity: 0.5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Please Wait...</span>
+            </div>
+        </div>
         @if(session('success'))
             <script>
                 const message = "{{ session('success') }}";
@@ -164,6 +169,9 @@
         @endif
         @if(session("channel_id"))
             <script>
+                // setTimeout(() => {
+                //     ws.send(JSON.stringify({ type: 'message', data: `DMODE|5C:CF:7F:50:32:ED` }));
+                // }, 1000);
                 window.CURRENT_ROUTE_NAME = document.querySelector('meta[name="current-route"]').getAttribute('content');
                 if(window.CURRENT_ROUTE_NAME === 'dashboard') {
                     setTimeout(() => {
@@ -219,14 +227,10 @@
                 };
 
 
-                $(document).ready(function() {
-                    window.selectedRegistrationDevice = localStorage.getItem('selectedRegistrationDevice') || ''; 
-                    $('#registration-device-select').val(window.selectedRegistrationDevice);
-                });
-
                 function selectRegistrationDevice(device) {
                     window.selectedRegistrationDevice = $(device).val();
-                    localStorage.setItem('selectedRegistrationDevice', window.selectedRegistrationDevice);
+                    $('#spinnerOverlay').removeClass('d-none');
+                    ws.send(JSON.stringify({ type: 'message', data: `DMODE|${$(device).val()}` }));
                 }
                 
                 ws.onmessage = (event) => {
@@ -238,8 +242,8 @@
                     
                     if(message.type === 'register') {
                         const messageValue = message.value;
-                        if(messageValue.split('|')[1].replace(/:/g, '-') == window.selectedRegistrationDevice.replace(/:/g, '-')) {
-                            $('#rfid').val(messageValue.split('|')[0]);
+                        if(message.mac_address == window.selectedRegistrationDevice) {
+                            $('#rfid').val(messageValue);
                         }
                     }
 
@@ -283,61 +287,22 @@
                         }
                     }
 
-                    if(message.type === 'peers') {
-                        const peers = message.value.split(',');
-
-                        peers.forEach(peer => {
-                            // remove pair button from DOM
-                            const pairButton = document.getElementById(`pair-device-button-${peer}`);  
-                            if (pairButton) {
-                                pairButton.remove();
-                            }
-
-                            const findButton = document.getElementById(`find-device-button-${peer}`);
-                            if (findButton) {
-                                findButton.classList.remove('d-none');
-                            }
-
-                            const forgetButton = document.getElementById(`forget-device-button-${peer}`);
-                            if (forgetButton) {
-                                forgetButton.classList.remove('d-none');
-                                const row = forgetButton.closest('tr');
-                                if (row) row.classList.remove('table-danger');
-                            }
-                        });
-
-                        $('.device-pairing-btn').removeClass('d-none').each(function () {
-                            $(this).closest('tr').addClass('table-danger');
-                        });
-                        
-                        $('.device-pairing-btn').one('click', function () {
-                            this.disabled = true;
-                            this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-                        });
+                    if(message.type == 'SWITCHED_REG_MODE' && message.value == window.selectedRegistrationDevice) {
+                        $('#spinnerOverlay').addClass('d-none');
                     }
-                }
-                
-                function pairDevice(deviceMac) {
-                    window.ws.send(JSON.stringify({ type: 'message', data: `PAIR|${deviceMac}` }));
+
+                    if(message.type == 'SWITCHED_ATT_MODE' && message.value == window.selectedRegistrationDevice) {
+                        $('#registration-device-select').val('');
+                    }
                 }
 
                 function findDevice(deviceMac) {
                     window.ws.send(JSON.stringify({ type: 'message', data: `FMT|${deviceMac}` }));
                 }
 
-                function forgetDevice(deviceMac) {
-                    window.ws.send(JSON.stringify({ type: 'message', data: `UMT|${deviceMac}` }));
-                }
-
                 function refreshHub() {
                     if(confirm("Are you sure you want to refresh the hub? Make sure you have removed all Terminals.")) {
                         window.ws.send(JSON.stringify({ type: 'message', data: `UMH` }));
-                    }
-                }
-
-                function resetCredsHub() {
-                    if(confirm("Are you sure you want to reset the hub credentials?")) {
-                        window.ws.send(JSON.stringify({ type: 'message', data: `RCH` }));
                     }
                 }
 

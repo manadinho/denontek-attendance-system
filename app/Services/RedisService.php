@@ -170,10 +170,10 @@ class RedisService
         Redis::hdel(self::SCHOOLS_KEY, $mac);
     }
 
-    public static function upsertMessageTemplates($s, $mac): void
+    public static function upsertMessageTemplates($s, $channelId): void
     {
 
-        self::callWhatsappServerEndpointToUpdateRedis(self::MESSAGE_TEMPLATES_KEY, implode('-', explode(':', $mac)), json_encode($s, JSON_UNESCAPED_UNICODE));
+        self::callWhatsappServerEndpointToUpdateRedis(self::MESSAGE_TEMPLATES_KEY, $channelId, json_encode($s, JSON_UNESCAPED_UNICODE));
     }
 
     // public static function removeMessageTemplates(AttendanceMessageTemplate $s): void

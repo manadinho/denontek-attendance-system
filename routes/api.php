@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAlertController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PublicController;
 
@@ -16,3 +17,4 @@ use App\Http\Controllers\API\PublicController;
 
 Route::get('update-is-on-whatsapp/{contact}/{status}', [PublicController::class, 'updateIsOnWhatsapp'])->name('students-update-is-on-whatsapp');
 Route::get('update-redis-cache', [PublicController::class, 'updateRedisCache'])->name('update-redis-cache');
+Route::get('/admin-alerts/send-alerts', [AdminAlertController::class, 'sendAlerts'])->name('admin-alerts.send-alerts');

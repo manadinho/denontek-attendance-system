@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
             [
                 'school_id'  => $shool->id,
                 'name'       => 'Device 1',
-                'mac_address' => 'C4:D8:D5:03:8E:33',
+                'mac_address' => '5C:CF:7F:50:32:ED',
                 'created_at' => now(),
             ],
             [
