@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminAlertController;
+use App\Http\Controllers\AttendanceFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaffController;
@@ -135,35 +136,19 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
-Route::get('/get-config/{macAddress}', function($macAddress) {
-    info("got call.....$macAddress");
-    return response()->json(['s_host' => '192.168.1.14', 's_port' => '3333', 'channel_id' => 'CKH3JV5-1', 'mor_checkin' => '10:00', 'mor_checkout' => '20:00']);
-})->name('get-config');
+Route::get('/get-config/{macAddress}', [DeviceController::class, 'getDeviceConfig'])->name('get-config');
 
-Route::post('/sync-attendance-file/{macAddress}/{fileName}', function($macAddress, $fileName) {
-    $uploadedFiles = request()->allFiles();
-
-    info ("Attendance file sync hit for MAC: $macAddress, File: $fileName");
-    info('Attendance Upload Hit at '.now());
-    info('Request Data: '.json_encode(request()->getContent()));
-
-    return response()->json(['status' => 'success', 'missing_file' => '', 'message' => 'File uploaded successfully']);
-
-    if (!empty($uploadedFiles)) {
-        foreach ($uploadedFiles as $fieldName => $file) {
-            info('File Name: '.$file->getClientOriginalName());
-            info('File Size: '.$file->getSize());
-            info('File Mime Type: '.$file->getMimeType());
-
-            $path = $file->store('attendance_files');
-            return response()->json(['status' => 'success', 'message' => 'File uploaded successfully', 'path' => $path]);
-        }
-    }
+Route::group(['prefix' => 'attendance-sync', 'as' => 'attendance-sync.'], function () {
+    Route::get('/{device_id?}', [AttendanceFileController::class, 'index'])->name('index')->middleware('auth', 'check.schoolid.session');
+    Route::post('/sync-attendance-file/{macAddress}/{fileName}', [AttendanceFileController::class, 'syncAttendance'])->name('sync');
 });
 
 // Device Routes
 // Route::get('/device/register-rfid', [DeviceController::class, 'registerRfid'])->name('device.register-rfid');
 // Route::get('/device/mark-attendance', [DeviceController::class, 'markAttendance'])->name('device.mark-attendance');
 // Route::post('/device/mark-attendance-bulk', [DeviceController::class, 'markAttendanceBulk'])->name('device.mark-attendance-bulk');
+
+// CRONS
+Route::get('/cron/run-attendance-sync', [AttendanceFileController::class, 'runAttendanceSyncCron'])->name('cron.run-attendance-sync');
 
 require __DIR__.'/auth.php';

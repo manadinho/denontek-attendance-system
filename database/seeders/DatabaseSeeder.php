@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
                 'checkout_start'=>  '11:00',
                 'checkout_end'  =>  '13:00',
                 'buffer_minutes' =>  '0',
+                'checkin_sync_time' => '10:00',
+                'checkout_sync_time' => '14:00',
             ];
             DB::table('school_settings')->updateOrInsert(['school_id' => $shool->id], $schoolSettingsData);
 

@@ -136,4 +136,17 @@ class DeviceController extends Controller
 
         return response()->json(['id' => $maxId]);
     }
+
+    public function getDeviceConfig($macAddress)
+    {
+        info("got getConfig call.....$macAddress");
+
+        $device = Device::where('mac_address', $macAddress)->with('school.schoolSetting')->first();
+
+        if(!$device) {
+            return response()->json(['message' => 'Device not found'], 404);
+        }
+
+        return response()->json(['s_host' => env('WEBSOCKET_BASE_URL'), 's_port' => env('WEBSOCKET_PORT'), 'channel_id' => $device->school->channel_id, 'mor_checkin' => $device->school->schoolSetting->checkin_sync_time, 'mor_checkout' => $device->school->schoolSetting->checkout_sync_time]);
+    }
 }

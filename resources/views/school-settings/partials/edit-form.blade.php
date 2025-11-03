@@ -85,6 +85,36 @@
                 <x-input-error class="mt-2" :messages="$errors->get('admin_phone_numbers')" />
             </div>
 
+            <div class="col-md-6 pt-2">
+                <x-input-label for="checkin_sync_time" :value="__('Checkin Sync')" />
+                <select class="form-control" name="checkin_sync_time" id="checkin_sync_time" required>
+                    <option value="" {{ $schoolSettings->checkin_sync_time == '' ? 'selected':'' }} disabled>Select Time</option>
+                    @for ($h = 0; $h < 24; $h++)
+                        @for ($m = 0; $m < 60; $m += 30)
+                            @php $t = sprintf('%02d:%02d:%02d', $h, $m, '00'); @endphp
+                            <option value="{{ $t }}" {{ $schoolSettings->checkin_sync_time === $t ? 'selected' : '' }}>
+                                {{ $t }}
+                            </option>
+                        @endfor
+                    @endfor
+                </select>
+            </div>
+
+            <div class="col-md-6 pt-2">
+                <x-input-label for="checkout_sync_time" :value="__('Checkout Sync')" />
+                <select class="form-control" name="checkout_sync_time" id="checkout_sync_time" required>
+                    <option value="" {{ $schoolSettings->checkout_sync_time == '' ? 'selected':'' }} disabled>Select Time</option>
+                    @for ($h = 0; $h < 24; $h++)
+                        @for ($m = 0; $m < 60; $m += 30)
+                            @php $t = sprintf('%02d:%02d:%02d', $h, $m, '00'); @endphp
+                            <option value="{{ $t }}" {{ $schoolSettings->checkout_sync_time === $t ? 'selected' : '' }}>
+                                {{ $t }}
+                            </option>
+                        @endfor
+                    @endfor
+                </select>
+            </div>
+
             <x-input-label class="pt-2 pb-2" for="checkin_end" :value="__('Week Days')" />
             <div class="weekdays-container">
             </div>

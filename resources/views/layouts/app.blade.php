@@ -18,6 +18,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -147,6 +148,19 @@
                 border-radius: 3px;
                 max-height: 39px;
             }
+            .nav-link {
+                display: block;
+                padding: .5rem 1rem;
+                color: #495057;
+                text-decoration: none;
+                transition: color .15s 
+                    ease-in-out, background-color .15s 
+                    ease-in-out, border-color .15s 
+                    ease-in-out;
+            }
+            .nav-link:hover {
+                color: #495057;
+            }
         </style>
     </head>
     <body class="font-sans antialiased">
@@ -183,6 +197,12 @@
                 ws = new WebSocket('{{ env("WEBSOCKET_URL") }}/{{session("channel_id")}}');
                 const pingInterval = 25000;
                 let pingIntervalId;
+                
+                function syncAttendanceFile(fileName)
+                {
+                    ws.send(JSON.stringify({ type: 'message', data: `SYNC_ATTENDANCE|${fileName}` }));
+                    $('#spinnerOverlay').removeClass('d-none');
+                }
 
                 ws.onopen = () => {
                     console.log('Connected to the WebSocket server');
@@ -206,12 +226,6 @@
                             ws.send(pingMessage);
                         }
                     }, pingInterval);
-
-                    // Send PAIR Command
-                    if(window.CURRENT_ROUTE_NAME === 'school-settings.edit') {
-                        // Send GET_PEERS command
-                        ws.send(JSON.stringify({ type: 'message', data: 'GET_PEERS' }));
-                    }
                 };
 
                 ws.onclose = () => {
@@ -255,44 +269,16 @@
                         $(`#device-chip-${mac}-offline`).css("display", "none");
                     }
 
-                    if(message.type === 'onGetAttendance') {
-
-                        // to make sure only the sync requested person listens to the response
-                        const element = document.getElementById('sync-attendance');
-                        if(!element.classList.contains('fa-spin')) {;
-                            return;
-                        }
-
-                        // check if valid json string or not
-                        try {
-                            const attendance = JSON.parse(message.value);
-
-                            // get highest id from the attendance
-                            const highestId = Math.max.apply(Math, attendance.map(function(o) { return o.id; }));
-
-                            if(attendance.length > 0 && attendance.length <= 1000) {
-                                window.ATTENDANCE = [...window.ATTENDANCE, ...attendance];
-                                ws.send(JSON.stringify({ type: 'message', data: `GET_ATTENDANCE|${highestId}` }));
-                            }else {
-                                if(window.ATTENDANCE.length > 0) {
-                                    saveAttendance();
-                                }
-                            }
-                        } catch (e) {
-                            console.log(window.ATTENDANCE);
-                            if(ws.readyState === WebSocket.OPEN) {
-                                saveAttendance();
-                            }
-                            return;
-                        }
-                    }
-
                     if(message.type == 'SWITCHED_REG_MODE' && message.value == window.selectedRegistrationDevice) {
                         $('#spinnerOverlay').addClass('d-none');
                     }
 
                     if(message.type == 'SWITCHED_ATT_MODE' && message.value == window.selectedRegistrationDevice) {
                         $('#registration-device-select').val('');
+                    }
+
+                    if(message.type == 'ATTENDANCE_SYNC_COMPLETE' && message.data == '{{ request()->get("device_id") }}') {
+                        location.reload();
                     }
                 }
 
@@ -304,48 +290,6 @@
                     if(confirm("Are you sure you want to refresh the hub? Make sure you have removed all Terminals.")) {
                         window.ws.send(JSON.stringify({ type: 'message', data: `UMH` }));
                     }
-                }
-
-                function syncAttendanceWithDevice() {
-                    const element = document.getElementById('sync-attendance');
-                    
-                    // first check if sync is already in progress or not
-                    if(element.classList.contains('fa-spin')) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Attendance is already being synced!',
-                        });
-                        return;
-                    }
-
-                    $.ajax({
-                        url: "{{ route('device.get-last-att-id') }}",
-                        type: 'get',
-                        success: function(response) {
-                            const lastId = response.id;
-                            // first check if websocket is connected or not
-                            if(ws.readyState !== WebSocket.OPEN) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Device is not connected to the server!',
-                                });
-                                return;
-                            }
-                            
-                            element.classList.add('fa-spin');
-                            
-                            ws.send(JSON.stringify({ type: 'message', data: `GET_ATTENDANCE|${lastId}` }));
-                        },
-                        error: function(error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'An error occurred while fetching the last attendance id!',
-                            });
-                        }
-                    });
                 }
 
                 function saveAttendance() {

@@ -13,6 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/device/mark-attendance-bulk',
-        'sync-attendance-file/*/*'
+        'attendance-sync/sync-attendance-file/*/*'
     ];
 }
