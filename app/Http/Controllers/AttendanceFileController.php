@@ -153,6 +153,8 @@ class AttendanceFileController extends Controller
     {
         $now = Carbon::now();
 
+        info('got hit.........runAttendanceSyncCron');
+
         $roundedTime = $this->roundToNearest30($now);
 
         $schoolSettings = SchoolSetting::where('checkin_sync_time', $roundedTime)->orWhere('checkout_sync_time', $roundedTime)->with('school')->get();
