@@ -113,6 +113,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/import/failed/{uploadId}', [ImportController::class, 'showFailed'])->name('show-failed');
     });
 
+    Route::group(['prefix' => 'setup-school', 'as' => 'setup-school.'], function () {
+        Route::get('/', [HomeController::class, 'setupSchool'])->name('index');
+        Route::post('/store', [HomeController::class, 'setupSchoolSave'])->name('store');
+    });
+
     Route::group(['prefix' => 'admin-alerts', 'as' => 'admin-alerts.'], function () {
         Route::get('/', [AdminAlertController::class, 'index'])->name('index');
         Route::put('/', [AdminAlertController::class, 'update'])->name('update');

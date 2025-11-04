@@ -10,7 +10,7 @@ use App\Models\Owner;
 use App\Models\User;
 use DB;
 
-class DatabaseSeeder extends Seeder
+class School2Seeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
 
             // Seed the schools table
             $shoolData = [
-                'name'    => 'ABC1 Schools',
-                'address' => '123, ABC1 Street, XYZ City',
+                'name'    => 'ABC2 Schools',
+                'address' => '123, ABC2 Street, XYZ City',
                 'channel_id' => Str::upper(Str::random(7)),
             ];
             $shool = School::updateOrCreate(['name' => $shoolData['name']], $shoolData);
@@ -45,8 +45,8 @@ class DatabaseSeeder extends Seeder
 
             // Seed the owners table
             $ownerData = [
-                'name'     => 'Owner ABC1 Schools',
-                'email'    => 'owner@abc1school.com',
+                'name'     => 'Owner ABC2 Schools',
+                'email'    => 'owner@abc2school.com',
                 'password' => \Hash::make('123456'),
             ];
             $owner = Owner::updateOrCreate(['email' => $ownerData['email']], $ownerData);
@@ -62,30 +62,19 @@ class DatabaseSeeder extends Seeder
             $userData = [
                 'school_id' => $shool->id,
                 'name'      => 'School Admin',
-                'email'     => 'admin@abc1school.com',
+                'email'     => 'admin@abc2school.com',
                 'contact'   => '03001234567',
                 'password' => \Hash::make('123456'),
                 'type'      => 'admin',
             ];
             User::updateOrCreate(['email' => $userData['email']], $userData);
 
-            // seed the superamdin user
-            $superAdminData = [
-                'school_id' => $shool->id,
-                'name'      => 'Super Admin',
-                'email'     => 'superadmin@attendance.com',
-                'contact'   => '03076929940',
-                'password' => \Hash::make('Pa$$@0987'),
-                'type'      => 'superadmin',
-            ];
-            User::updateOrCreate(['email' => $superAdminData['email']], $superAdminData);
-
             // Create Devices
             $deviceData = [
             [
                 'school_id'  => $shool->id,
                 'name'       => 'Device 1',
-                'mac_address' => '5C:CF:7F:50:32:ED',
+                'mac_address' => '48:3F:DA:A6:15:E1',
                 'created_at' => now(),
             ]];
             DB::table('devices')->insert($deviceData);

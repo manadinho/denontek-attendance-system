@@ -69,7 +69,9 @@ class StaffFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, Wi
             'password' => ['index' => 2, 'title' => 'password', 'rules' => 'required|min:5'],
             'type' => ['index' => 3, 'title' => 'type', 'rules' => 'required|in:teacher,employee'],
             'contact' => ['index' => 4, 'title' => 'contact', 'rules' => 'required'],
-            'rfid' => ['index' => 5, 'title' => 'rfid', 'rules' => 'required|unique:users,rfid']
+            'rfid' => ['index' => 5, 'title' => 'rfid', 'rules' => 'required|unique:users,rfid'],
+            'staff_id' => ['index' => 6, 'title' => 'staff_id', 'rules' => 'nullable'],
+            'cnic' => ['index' => 7, 'title' => 'cnic', 'rules' => 'nullable']
         ];
     }
 
@@ -154,6 +156,8 @@ class StaffFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, Wi
             'type' => $row[3] ?? "",
             'contact' => $row[4] ?? null,
             'rfid' => $row[5] ?? null,
+            'staff_id' => $row[6] ?? null,
+            'cnic' => $row[7] ?? null,
         ];
 
         $filteredData = array_filter($data, function ($value) {
@@ -175,7 +179,9 @@ class StaffFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, Wi
                 'password' => \Hash::make($importData['password']),
                 'type' => $importData['type'],
                 'contact' => $importData['contact'],
-                'rfid' => $importData['rfid']
+                'rfid' => $importData['rfid'],
+                'staff_id' => $importData['staff_id'] ?? null,
+                'cnic' => $importData['cnic'] ?? null,
             ]);
         } catch (\Throwable $th) {
             

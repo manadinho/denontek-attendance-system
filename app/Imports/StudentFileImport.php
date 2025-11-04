@@ -71,7 +71,9 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_contact' => ['index' => 2, 'title' => 'guardian_contact', 'rules' => 'required'],
             'guardian_relation' => ['index' => 3, 'title' => 'guardian_relation', 'rules' => 'required'],
             'standard' => ['index' => 4, 'title' => 'standard', 'rules' => 'required'],
-            'rfid' => ['index' => 5, 'title' => 'rfid', 'rules' => 'required|unique:students,rfid']
+            'rfid' => ['index' => 5, 'title' => 'rfid', 'rules' => 'required|unique:students,rfid'],
+            'reg_no' => ['index' => 6, 'title' => 'reg_no', 'rules' => 'nullable'],
+            'guardian_cnic' => ['index' => 7, 'title' => 'guardian_cnic', 'rules' => 'nullable']
         ];
     }
 
@@ -156,6 +158,8 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_relation' => $row[3] ?? "",
             'standard' => $row[4] ?? null,
             'rfid' => $row[5] ?? null,
+            'reg_no' => $row[6] ?? null,
+            'guardian_cnic' => $row[7] ?? null,
         ];
 
         $filteredData = array_filter($data, function ($value) {
@@ -189,6 +193,8 @@ class StudentFileImport implements OnEachRow, SkipsOnFailure, WithChunkReading, 
             'guardian_contact' => $importData['guardian_contact'],
             'guardian_relation' => $importData['guardian_relation'],
             'rfid' => $importData['rfid'],
+            'registeration_id' => $importData['reg_no'] ?? null,
+            'guardian_cnic' => $importData['guardian_cnic'] ?? null,
         ]);
         } catch (\Throwable $th) {
                      

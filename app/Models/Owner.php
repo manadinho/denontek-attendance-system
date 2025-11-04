@@ -11,7 +11,7 @@ class Owner extends Authenticatable
 {
     use HasFactory;
 
-    protected $guarded = ['id', 'email'];
+    protected $guarded = ['id'];
 
     public function schools(): BelongsToMany
     {
