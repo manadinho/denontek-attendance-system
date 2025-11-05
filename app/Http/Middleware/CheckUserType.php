@@ -13,9 +13,9 @@ class CheckUserType
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $type): Response
+    public function handle(Request $request, Closure $next, ...$types): Response
     {
-        if(userType() != $type) {
+        if(!in_array(userType(), $types)) {
             return redirect()->back();
         }
         return $next($request);

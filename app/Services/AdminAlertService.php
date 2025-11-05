@@ -65,7 +65,7 @@ class AdminAlertService
                 continue;
             }
 
-            Http::post(env('WHATSAPP_URL') . '/send', [
+            Http::post($school->schoolSetting->whatsapp_url . '/send', [
                 'number'      => $contact,
                 'message' => $message,
             ]);    

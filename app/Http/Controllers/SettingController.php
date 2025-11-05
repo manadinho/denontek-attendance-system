@@ -39,6 +39,12 @@ class SettingController extends Controller
             'checkout_sync_time' => 'required',
         ]);
 
+        if(userType() == 'superadmin') {
+            $request->validate([
+                'whatsapp_url' => 'required|url',
+            ]);
+        }
+
         $adminPhoneNumbers = null;
         if($request->admin_phone_numbers) {
             $validatedAdminPhoneNumbers = app(SettingsService::class)->validateAdminPhoneNumbers($request->admin_phone_numbers);
@@ -52,17 +58,21 @@ class SettingController extends Controller
         $weekOffDays = implode(',', $request->weekdays);
 
         $school_id = session('school_id');
-        SchoolSetting::where('school_id', $school_id)->update([
-                                                        'checkin_start' => $request->checkin_start, 
-                                                        'checkin_end' => $request->checkin_end, 
-                                                        'checkout_start' => $request->checkout_start, 
-                                                        'checkout_end' => $request->checkout_end, 
-                                                        'week_off_days' => $weekOffDays, 
-                                                        'buffer_minutes' => $request->buffer_minutes, 
-                                                        'admin_phone_numbers' => $adminPhoneNumbers,
-                                                        'checkin_sync_time' => $request->checkin_sync_time,
-                                                        'checkout_sync_time' => $request->checkout_sync_time,
-                                                    ]);
+        $schoolData = [
+                'checkin_start' => $request->checkin_start, 
+                'checkin_end' => $request->checkin_end, 
+                'checkout_start' => $request->checkout_start, 
+                'checkout_end' => $request->checkout_end, 
+                'week_off_days' => $weekOffDays, 
+                'buffer_minutes' => $request->buffer_minutes, 
+                'admin_phone_numbers' => $adminPhoneNumbers,
+                'checkin_sync_time' => $request->checkin_sync_time,
+                'checkout_sync_time' => $request->checkout_sync_time,
+            ];
+        if($request->whatsapp_url) {
+            $schoolData['whatsapp_url'] = $request->whatsapp_url;
+        }
+        SchoolSetting::where('school_id', $school_id)->update($schoolData);
         app(RedisService::class)->upsertSchool($school_id);
         return redirect()->route('school-settings.edit')->with('success', 'School settings updated successfully');
     }

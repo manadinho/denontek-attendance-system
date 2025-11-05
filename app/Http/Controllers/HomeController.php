@@ -61,16 +61,23 @@ class HomeController extends Controller
 
     public function schools()
     {
-        $schools = user()->load('schools')->schools;
+        if(userType() == 'superadmin') {
+            $schools = School::all();
+        } else {
+            $schools = user()->load('schools')->schools;
+        }
+
         return view('schools', ['schools' => $schools]);
     }
 
     public function selectSchool($school_id)
     {
-        $schools = user()->load('schools')->schools;
+        if(userType() != 'superadmin') {
+            $schools = user()->load('schools')->schools;
         
-        if(!$schools->contains('id', $school_id)) {
-            return redirect()->back();
+            if(!$schools->contains('id', $school_id)) {
+                return redirect()->back();
+            }
         }
 
         session(['school_id' => $school_id]);
@@ -121,6 +128,7 @@ class HomeController extends Controller
             'settings.buffer_minutes'    => ['required','integer','min:0'],
             'settings.checkin_sync_time' => ['required','date_format:H:i'],
             'settings.checkout_sync_time'=> ['required','date_format:H:i'],
+            'settings.whatsapp_url'      => ['required','url'],
 
             // Owner
             'owner.name'             => ['required','string','max:255'],
@@ -169,6 +177,7 @@ class HomeController extends Controller
                     'buffer_minutes'      => $data['settings']['buffer_minutes'],
                     'checkin_sync_time'   => $data['settings']['checkin_sync_time'],
                     'checkout_sync_time'  => $data['settings']['checkout_sync_time'],
+                    'whatsapp_url'        => $data['settings']['whatsapp_url'],
                 ]
             );
 

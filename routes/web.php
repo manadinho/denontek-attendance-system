@@ -35,7 +35,7 @@ Route::get('/', function () {return redirect('/dashboard');});
 Route::group(['middleware' => 'auth'], function () {
 
     // Owner Specific Routes Start
-    Route::group(['middleware' => 'check.usertype:owner'], function() {
+    Route::group(['middleware' => 'check.usertype:owner,superadmin'], function() {
         Route::get('/schools', [HomeController::class, 'schools'])->name('schools');
         Route::get('/select-school/{school_id}', [HomeController::class, 'selectSchool'])->name('select-school');
     });

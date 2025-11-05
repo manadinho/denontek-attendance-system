@@ -43,8 +43,7 @@ class AdminAlertController extends Controller
 
     public function sendAlerts()
     {
-        $alerts = AdminAlert::where('school_id', session('school_id'))
-            ->where('active', true)
+        $alerts = AdminAlert::where('active', true)
             ->whereTime('time', '>=', Carbon::now()->subMinutes(5)->format('H:i'))
             ->whereTime('time', '<=', Carbon::now()->addMinutes(5)->format('H:i'))
             ->get();

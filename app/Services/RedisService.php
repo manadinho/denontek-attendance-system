@@ -185,8 +185,8 @@ class RedisService
 
     private static function callWhatsappServerEndpointToUpdateRedis($hash, $key, $value)
     {
-        info(env('WHATSAPP_URL') . '/redis/set');
-        $response = \Http::post(env('WHATSAPP_URL') . '/redis/set', [
+        info(env('NODE_SERVICE') . '/redis/set');
+        $response = \Http::post(env('NODE_SERVICE') . '/redis/set', [
             'hash'  => $hash,
             'key'   => $key,
             'value' => $value,
@@ -204,7 +204,7 @@ class RedisService
 
     private static function callWhatsappServerEndpointToDeleteFromRedis($hash, $key)
     {
-        $response = \Http::post(env('WHATSAPP_URL') . '/redis/hdel', [
+        $response = \Http::post(env('NODE_SERVICE') . '/redis/hdel', [
             'hash' => $hash,
             'key'  => $key,
         ]);

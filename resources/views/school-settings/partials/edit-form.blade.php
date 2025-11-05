@@ -115,6 +115,14 @@
                 </select>
             </div>
 
+            @if(userType() == 'superadmin')
+                <div class="col-md-6 pt-2">
+                    <x-input-label for="whatsapp_url" :value="__('Whatsapp URL')" />
+                    <x-text-input id="whatsapp_url" name="whatsapp_url" type="text" class="mt-1 block w-full" :value="old('whatsapp_url', $schoolSettings->whatsapp_url)" required autofocus />
+                    <x-input-error class="mt-2" :messages="$errors->get('whatsapp_url')" />
+                </div>
+            @endif
+
             <x-input-label class="pt-2 pb-2" for="checkin_end" :value="__('Week Days')" />
             <div class="weekdays-container">
             </div>

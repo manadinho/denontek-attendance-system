@@ -18,7 +18,7 @@
                         </x-nav-link>
                     </div>
                 @endif
-                @If(userType() == 'owner')
+                @If(userType() == 'owner' || userType() == 'superadmin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('schools')" :active="request()->routeIs('schools')">
                             {{ __('Schools') }}

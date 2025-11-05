@@ -72,6 +72,10 @@
                         <label class="form-label">Check-out Sync Time</label>
                         <input type="time" name="settings[checkout_sync_time]" value="{{ old('settings.checkout_sync_time','14:00') }}" class="form-control" required>
                     </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Whatsapp URL</label>
+                        <input type="text" name="settings[whatsapp_url]" value="{{ old('settings.whatsapp_url','') }}" class="form-control" required>
+                    </div>
                 </div>
             </div>
 

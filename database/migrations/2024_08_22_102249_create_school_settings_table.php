@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('admin_phone_numbers')->nullable();
             $table->time('checkin_sync_time')->nullable();
             $table->time('checkout_sync_time')->nullable();
+            $table->string('whatsapp_url')->nullable();
             $table->timestamps();
         });
     }
