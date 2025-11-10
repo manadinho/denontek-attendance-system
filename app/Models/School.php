@@ -28,4 +28,9 @@ class School extends Model
     {
         return $this->hasMany(Device::class);
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, 'school_module', 'school_id', 'module_id');
+    }
 }

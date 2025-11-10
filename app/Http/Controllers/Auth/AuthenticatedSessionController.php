@@ -37,6 +37,8 @@ class AuthenticatedSessionController extends Controller
             session(['school_id' => user()->school_id]);
 
             session(['channel_id' => School::where('id', user()->school_id)->value('channel_id')]);
+
+            session(['modules' => School::find(user()->school_id)->modules->pluck('name')->toArray()]);
             $request->session()->regenerate();
 
             return redirect()->intended(RouteServiceProvider::HOME);
@@ -61,6 +63,8 @@ class AuthenticatedSessionController extends Controller
         }
 
         session(['school_id' => null]);
+        session(['channel_id' => null]);
+        session(['modules' => null]);
 
         $request->session()->invalidate();
 

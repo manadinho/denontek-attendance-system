@@ -42,3 +42,12 @@ function getUploadFileName($fileName)
     unset($fileName[0]);
     return implode('_', $fileName);
 }
+
+function isWhatsappModuleEnabled()
+{
+    if(isUser()) {
+        $modules = session('modules', []);
+        return in_array('whatsapp', $modules);
+    }
+    return false;
+}

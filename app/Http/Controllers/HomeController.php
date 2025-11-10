@@ -8,6 +8,7 @@ use App\Models\Standard;
 use App\Models\Device;
 use App\Models\Owner;
 use App\Models\School;
+use App\Models\SchoolSetting;
 use App\Models\User;
 use App\Services\StandardService;
 use Illuminate\Support\Str;
@@ -82,6 +83,7 @@ class HomeController extends Controller
 
         session(['school_id' => $school_id]);
         session(['channel_id' => School::where('id', $school_id)->value('channel_id')]);
+        session(['modules' => School::find($school_id)->modules->pluck('name')->toArray()]);
         
         return redirect()->route('dashboard');
     }
@@ -233,6 +235,78 @@ class HomeController extends Controller
                 ->back()
                 ->with('status', 'School created: '.$school->name.' (Channel: '.$school->channel_id.')');
         });
+    }
+
+    public function connectWhatsapp()
+    {
+        if(!isWhatsappModuleEnabled()) {
+            abort(404);
+        }
+
+        return view('connect-whatsapp.index');
+    }
+
+    public function getWhatsappStatus()
+    {
+        if(!isWhatsappModuleEnabled()) {
+            abort(404);
+        }
+
+        $schoolSetting = SchoolSetting::where('school_id', session('school_id'))->first();
+
+        $url = rtrim($schoolSetting->whatsapp_url, '/') . '/skl-' . session('school_id') . '/start-session';
+
+        $maxAttempts = 5;              // retry up to 3 times
+        $backoffUs   = 250000;         // 250 ms between attempts
+        $response    = null;
+        $json        = null;
+
+        for ($i = 1; $i <= $maxAttempts; $i++) {
+            try {
+                $response = \Http::retry(2, 200)     // network/5xx retry
+                    ->get($url);
+
+                $json = $response->json();
+            } catch (\Throwable $e) {
+                $json = ['status' => 'error', 'message' => $e->getMessage()];
+            }
+
+            // break if not explicitly "error"
+            if ((($json['status'] ?? null) !== 'error') && !($json['status'] == 'disconnected' && $json['data']['qr'] == 'waiting')) {
+                break;
+            }
+
+            // last attempt? stop; otherwise backoff and try again
+            if ($i < $maxAttempts) {
+                usleep($backoffUs);
+            }
+        }
+
+        $finalHtml = view('connect-whatsapp.content', ['session' => $json])->render();
+
+        // Always return 200 so the frontend can render the HTML state
+        return response()->json(['html' => $finalHtml, 'session' => $json], 200);
+    }
+
+    public function destroyWhatsappSession()
+    {
+        if(!isWhatsappModuleEnabled()) {
+            abort(404);
+        }
+
+        $schoolSetting = SchoolSetting::where('school_id', session('school_id'))->first();
+
+        $url = rtrim($schoolSetting->whatsapp_url, '/') . '/skl-' . session('school_id') . '/destroy-session';
+
+        try {
+            $response = \Http::get($url);
+
+            $json = $response->json();
+        } catch (\Throwable $e) {
+            $json = ['status' => 'error', 'message' => $e->getMessage()];
+        }
+
+        return response()->json($json, 200);
     }
 
     private function abortIfNotSuperAdmin()

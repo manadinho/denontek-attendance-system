@@ -101,6 +101,14 @@ class DatabaseSeeder extends Seeder
             ];
 
             DB::table('admin_alerts')->insert($alertData);
+
+            // Add whatsapp module
+            $moduleId = DB::table('modules')->insertGetId([
+                'name' => 'whatsapp',
+                'description' => 'Module for WhatsApp integration features',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }

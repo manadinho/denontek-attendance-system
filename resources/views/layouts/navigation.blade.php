@@ -131,17 +131,27 @@
                                 {{ __('School Settings') }}
                             </x-dropdown-link>
 
+                            @if(isWhatsappModuleEnabled())
                             <x-dropdown-link :href="route('attendance-templates.index')">
                                 {{ __('Attendance Templates') }}
                             </x-dropdown-link>
+                            @endif
 
+                            @if(isWhatsappModuleEnabled())
                             <x-dropdown-link :href="route('admin-alerts.index')">
                                 {{ __('Admin Alerts') }}
                             </x-dropdown-link>
+                            @endif
 
                             <x-dropdown-link :href="route('attendance-sync.index')">
                                 {{ __('Attendance Sync') }}
                             </x-dropdown-link>
+
+                            @if(isWhatsappModuleEnabled())
+                                <x-dropdown-link :href="route('connect-whatsapp.index')">
+                                    {{ __('Connect Whatsapp') }}
+                                </x-dropdown-link>
+                            @endif
                         @endif
 
                         <!-- Authentication -->
@@ -219,13 +229,27 @@
                         {{ __('School Settings') }}
                     </x-dropdown-link>
 
+                    @if(isWhatsappModuleEnabled())
                     <x-dropdown-link :href="route('attendance-templates.index')">
                         {{ __('Attendance Templates') }}
                     </x-dropdown-link>
+                    @endif
 
+                    @if(isWhatsappModuleEnabled())
                     <x-dropdown-link :href="route('admin-alerts.index')">
                         {{ __('Admin Alerts') }}
                     </x-dropdown-link>
+                    @endif
+
+                    <x-dropdown-link :href="route('attendance-sync.index')">
+                        {{ __('Attendance Sync') }}
+                    </x-dropdown-link>
+                    
+                    @if(isWhatsappModuleEnabled())
+                        <x-dropdown-link :href="route('connect-whatsapp.index')">
+                            {{ __('Connect Whatsapp') }}
+                        </x-dropdown-link>
+                    @endif
                 @endif
 
                 <!-- Authentication -->

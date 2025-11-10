@@ -159,7 +159,9 @@ class RedisService
             'checkout_start' => $school->schoolSetting->checkout_start,
             'checkout_end'   => $school->schoolSetting->checkout_end,
             'buffer_minutes' => $school->schoolSetting->buffer_minutes,
-            'week_off_days'  => $school->schoolSetting->week_off_days
+            'week_off_days'  => $school->schoolSetting->week_off_days,
+            'whatsapp_url'   => $school->schoolSetting->whatsapp_url,
+            'enabled_modules' => $school->modules->pluck('name')->toArray(),
         ];
 
         self::callWhatsappServerEndpointToUpdateRedis(self::SCHOOLS_KEY, implode('-', explode(':', $school->channel_id)), json_encode($payload, JSON_UNESCAPED_UNICODE));

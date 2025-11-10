@@ -39,6 +39,8 @@ class GoogleLoginController extends Controller
             session(['school_id' => user()->school_id]);
 
             session(['channel_id' => School::where('id', user()->school_id)->value('channel_id')]);
+
+            session(['modules' => School::find(user()->school_id)->modules->pluck('name')->toArray()]);
         }
 
         return redirect(RouteServiceProvider::HOME);

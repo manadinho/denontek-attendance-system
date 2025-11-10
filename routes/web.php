@@ -118,6 +118,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', [HomeController::class, 'setupSchoolSave'])->name('store');
     });
 
+    Route::group(['prefix' => 'connect-whatsapp', 'as' => 'connect-whatsapp.'], function () {
+        Route::get('/', [HomeController::class, 'connectWhatsapp'])->name('index');
+        Route::get('get-status', [HomeController::class, 'getWhatsappStatus'])->name('get-status');
+        Route::get('destroy-session', [HomeController::class, 'destroyWhatsappSession'])->name('destroy-session');
+    });
+
     Route::group(['prefix' => 'admin-alerts', 'as' => 'admin-alerts.'], function () {
         Route::get('/', [AdminAlertController::class, 'index'])->name('index');
         Route::put('/', [AdminAlertController::class, 'update'])->name('update');
