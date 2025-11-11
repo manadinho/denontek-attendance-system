@@ -14,7 +14,7 @@ class PublicController extends Controller
             'is_on_whatsapp' => $status == 1
         ]);
 
-        $students = Student::where('guardian_contact', $contact)->get(['id', 'is_on_whatsapp', 'rfid', 'name', 'guardian_contact']);
+        $students = Student::where('guardian_contact', $contact)->get();
 
         foreach ($students as $student) {
             app(RedisService::class)->upsertStudent($student);

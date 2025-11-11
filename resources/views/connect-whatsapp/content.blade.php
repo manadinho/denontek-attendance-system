@@ -29,9 +29,9 @@
         </div>
     </div>
 @else
-    <div class="flex items-center justify-center h-64">
+    <div class="flex items-center justify-center h-80" style="height: 50vh !important">
         <div class="text-center">
-        <div class="text-sm uppercase tracking-wide text-red-700 font-semibold mb-2">❌ Not connected</div>
+        <div class="text-sm uppercase tracking-wide text-red-700 font-semibold mb-2 mt-3">❌ Not connected</div>
         <div class="text-gray-700 mb-4">Scan the QR to link your device.</div>
         <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-gray-500 font-semibold">
             <canvas id="qrcanvas"></canvas>
