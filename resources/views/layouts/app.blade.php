@@ -209,7 +209,9 @@
 
                     if(window.CURRENT_ROUTE_NAME === 'dashboard') {
                         // Send ARP command
-                        ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                        setTimeout(() => {
+                            ws.send(JSON.stringify({ type: 'message', data: 'ARP' }));
+                        }, 2000);
                     }
 
                     setInterval(() => {
