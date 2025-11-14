@@ -69,6 +69,6 @@ class WebsocketService
         fwrite($fp, chr(0x88) . chr(0x80) . random_bytes(2));
 
         fclose($fp);
-        echo "Sent.\n";
+        return true;
     }
 }

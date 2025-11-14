@@ -154,6 +154,7 @@ class AttendanceFileController extends Controller
         $now = Carbon::now();
 
         info('got hit.........runAttendanceSyncCron');
+        info('Current Time: ' . $now->toDateTimeString());
 
         $roundedTime = $this->roundToNearest30($now);
 
@@ -165,6 +166,8 @@ class AttendanceFileController extends Controller
             $devices = $school->devices()->get();
 
             $fileName = '';
+
+            info("Processing School ID: {$school->id} at rounded time: $roundedTime");
 
             if($schoolSetting->checkin_sync_time == $roundedTime) {
                 $fileName = 'morCheckin' . $now->day . '.csv';
